@@ -66,13 +66,13 @@ def process(request):
 		usr = User.objects.create(user_name=ld_uname, password=ld_pswd, verification_flag='Not Verified')
 		usr.save()
 
-		pd = PersonalDetails(first_name=pd_firstname, last_name=pd_lastname, gender=pd_gender, education=pd_education, father_name=pd_fathername, mother_name=pd_mothername, current_address=pd_currentaddress, city=pd_city, pincode=pd_pincode, permanent_address=pd_permanentaddress, telephone=pd_telephone, mobile=pd_mobile, user=usr)				
+		pd = PersonalDetail(first_name=pd_firstname, last_name=pd_lastname, gender=pd_gender, education=pd_education, father_name=pd_fathername, mother_name=pd_mothername, current_address=pd_currentaddress, city=pd_city, pincode=pd_pincode, permanent_address=pd_permanentaddress, telephone=pd_telephone, mobile=pd_mobile, user=usr)				
 		pd.save()
 		
-		ed = EmploymentDetails(company_type=ed_companytype, designation=ed_designation, income=ed_income, work_years=ed_workyears, name=ed_name, office_address=ed_officeaddress, city=ed_city, pincode=ed_pincode, email_id=ed_emailid, user=usr)
+		ed = EmploymentDetail(company_type=ed_companytype, designation=ed_designation, income=ed_income, work_years=ed_workyears, name=ed_name, office_address=ed_officeaddress, city=ed_city, pincode=ed_pincode, email_id=ed_emailid, user=usr)
 		ed.save()
 		
-		bd = BankDetails(account_number=bd_account_number, bankname=bd_bankname, branch_address=bd_branch_address, account_type=bd_account_type, user=usr)
+		bd = BankDetail(account_number=bd_account_number, bankname=bd_bankname, branch_address=bd_branch_address, account_type=bd_account_type, user=usr)
 		bd.save()
 		
 		cd = Card(card_type=cd_cardtype, interest = 343, credited_amount=9078, user=usr)	
@@ -80,4 +80,19 @@ def process(request):
 		
 		return render_to_response('register/success.html', {'USR': usr})
 		
+
+def verify_user(request):
+    ld_uname = request.POST['USER_NAME']
+    ld_pswd = request.POST['PASSWORD']
+    try:
+        USR = User.objects.get(user_name=ld_uname, password=ld_pswd)
+    except (KeyError, User.DoesNotExist):
+        return HttpResponse("ERROR ")
+    else:
+        return render_to_response('user/index.html', {'USR': USR})
+
+
+	
+def access_details(request, USR):	
+	return render_to_response('register/success.html', {'USR': USR})	
 				

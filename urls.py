@@ -8,6 +8,7 @@ urlpatterns = patterns('',
 
     (r'^creditcard/register$', 'creditcard.views.register'),
 	(r'^creditcard/register/success/$', 'creditcard.views.process'),
+	(r'^creditcard/user/$', 'creditcard.views.verify_user'),
 	(r'^creditcard/home/$', 'creditcard.views.index'),
 	(r'^creditcard/home/cards.html$', 'creditcard.views.cards'),
 	(r'^creditcard/home/index.html$', 'creditcard.views.index'),

@@ -152,20 +152,22 @@
               <div class="left-bot-corner">
                 <div class="inner">
                   <h4><b>User</b> Sign-In</h4>
-                  <form action="#" id="login-form">
+                  <form action="../user/" id="login-form" method="post">
+				  {% csrf_token %}
                     <fieldset>
                       <div class="field">
-                        <label>Username:</label>
-                        <input type="text" />
+					  	<label for="USER_NAME">User Name: </label>
+						<input name="USER_NAME" type="text">
                       </div>
                       <div class="field">
-                        <label>Password:</label>
-                        <input type="password" />
+						<label for="PASSWORD">Password: </label>
+						<input name="PASSWORD" type="password">
                       </div>
                       <div class="field1">
                         <label class="extra">Remember Me:</label>
                         <input type="checkbox" class="extra" />
-                        <a href="#"><em><b>Log In<span>Log In</span></b></em></a></div>
+						<input type="submit" value="Log In" /></div>
+                        <!--<a href="user/success/"><em><b>Log In<span>Log In</span></b></em></a></div>-->
                       <ul>
                         <li><a href="#">Forgot your password?</a></li>
                         <li class="last"><a href="/creditcard/register">Register</a></li>
