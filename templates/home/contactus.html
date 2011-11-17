@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>ABC Bank | Statements</title>
+<title>ABC Bank | Contact Us</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <script src="js/jquery-1.4.2.min.js" type="text/javascript"></script>
@@ -19,14 +19,18 @@
 <link href="css/ie6.css" rel="stylesheet" type="text/css" />
 <![endif]-->
 </head>
-<body id="page1">
+<body id="page5">
 <!-- START PAGE SOURCE -->
 <div id="main">
   <div id="header">
     <div class="row-1">
       <div class="fleft"><a href="#"><img src="images/logo.gif" alt="" /></a></div>
       <div class="fright">
-		<p>Welcome {{ USR.personaldetail.first_name  }} {{ USR.personaldetail.last_name  }}  || <a href="/creditcard/home/index.html">Logout</a></p>
+        <ul>
+          <li><a href="index.html"><img src="images/icon1.gif" alt="" /></a></li>
+          <li><a href="#"><img src="images/icon2-act.gif" alt="" /></a></li>
+          <li><a href="sitemap.html"><img src="images/icon3.gif" alt="" /></a></li>
+        </ul>
       </div>
     </div>
     <div class="row-2">
@@ -35,54 +39,76 @@
           <li><a href="index.html"><span>Home</span></a></li>
           <li><a href="cards.html"><span>Cards For You</span></a></li>
           <li><a href="services.html"><span>Services For You</span></a></li>
-          <li><a href="contactus.html"><span>Contact Us</span></a></li>
+          <li><a href="#" class="active"><span>Contact Us</span></a></li>
           <li class="last"><a href="sitemap.html"><span>Sitemap</span></a></li>
         </ul>
       </div>
     </div>
-	<div class="row-3">
+    <div class="row-3">
       <div class="inside">
         <h2>Credit is the Source <b>of Convinience</b></h2>
         <p>No need to worry about carrying cash with you all the time... The one solution to all your money problems... Apply for the ABC Credit Card and enjoy a tension - free life.</p>
+        <form action="#" id="search-form">
+          <fieldset>
+            <label>Search:</label>
+            <input type="text" />
+            <a href="#" class="link1"><em><b>Go!</b></em></a>
+          </fieldset>
+        </form>
       </div>
     </div>
-   </div>
-  <div id="footer">
-    <div class="footer-nav">
-      <div class="left">
-        <ul>
-          <li><a href="index.html">My Accounts</a></li>
-          <li><a href="transfer.html">Payments/Transfers</a></li>
-          <li><a href="#">Statements</a></li>
-          <li class="last"><a href="profile.html">My Profile</a></li>
-        </ul>
-      </div>
-    </div>
+    <div class="extra"><img src="images/header-img.png" alt="" /></div>
   </div>
   <div id="content">
-    <ul class="box-list">
-      <li><br /></li>
-	  <li><br /></li>
-	  <li><br /></li>
-	  <li><br /></li>
-	  <li><br /></li>
-      <li><br /></li>
-    </ul>
+    <div class="box">
+      <div class="border-bot">
+        <div class="right-bot-corner">
+          <div class="left-bot-corner">
+            <div class="inner">
+              <div class="box1 alt">
+                <div class="inner">
+                  <h4><b>Our</b> Contacts</h4>
+                  <div class="address"><b>Aayush :</b>+91-94780-17939<br />
+                    <b>Deepak :</b>+91-94781-17034<br />
+                    <b>Kapil :</b>+91-97796-13569<br />
+                    <b>Pankaj :</b>+91-97796-14945</div>
+                  <p class="p0 extra-wrap"><b>Miscellaneous info :</b><br />
+                    These are the contact numbers of the persons involved in handling the Credit Cards segment of the ABC Bank. They can be contacted if you have any doubt regarding the bank policies. For further queries, you can send an e-mail to the managers using the portal below.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="indent">
       <div class="wrapper">
         <div class="col-1">
-       <h1>List of Statements</h1>
-	   <br /><br />
-	   {% for statement in list_of_statement %}
-		{{ statement.transaction_date}} <br />
-		{{ statement.amount}}<br />
-		{{ statement.to_account}}<br />
-		{{ statement.transaction_id}}<br />
-		<br /><br />
-	{% endfor %}
-	   
-	   
-	   </div>
+          <h3><b>Contact</b> Form</h3>
+			<form enctype="multipart/form-data" method="post" action="http://www.response-o-matic.com/mail.php" accept-charset="UTF-8">
+			  <div>
+				<input type="hidden" name="acctid" id="acctid" value="ogk8xotufj7avkn8" />
+				<input type="hidden" name="formid" id="formid" value="1018886" />
+				<input type="hidden" name="required_vars" id="required_vars" value="name,email,field-8e63eb6c57a5180" />
+			  </div>
+			  <table cellspacing="50" cellpadding="5" border="0">
+				<tr>
+				  <td valign="top"><strong>Name :</strong></td>
+				  <td valign="top"><input type="text" name="name" id="name" size="40" value="" /></td></tr>
+				<tr>
+				  <td valign="top"><strong>Email Address :</strong></td>
+				  <td valign="top"><input type="text" name="email" id="email" size="40" value="" /></td></tr>
+				<tr>
+				  <td valign="top"><strong>Subject :</strong></td>
+				  <td valign="top"><input type="text" name="field-1425afb51f5b636" id="field-1425afb51f5b636" size="40" value="" /></td></tr>
+				<tr>
+				  <td valign="top"><strong>Message :</strong></td>
+				  <td valign="top"><textarea name="field-8e63eb6c57a5180" id="field-8e63eb6c57a5180" rows="6" cols="40"></textarea></td></tr>
+				<tr>
+				  <td colspan="2" align="center"><input type="submit" value=" Submit Form " /></td></tr>
+			  </table>
+			</form>
+		</div>
         <div class="col-2">
           <div class="box2">
             <div class="border-top">
@@ -92,9 +118,21 @@
 				    <h4><b>User</b> Sign-In</h4>
 					<form action="#" id="login-form">
                     <fieldset>
-					  <p>Welcome </p>
+                      <div class="field">
+                        <label>Username:</label>
+                        <input type="text" />
+                      </div>
+                      <div class="field">
+                        <label>Password:</label>
+                        <input type="password" />
+                      </div>
+                      <div class="field1">
+                        <label class="extra">Remember Me:</label>
+                        <input type="checkbox" class="extra" />
+                        <a href="#"><em><b>Log In<span>Log In</span></b></em></a></div>
                       <ul>
-                        <li><a href="/creditcard/home/index.html">Logout</a></li>
+                        <li><a href="#">Forgot your password?</a></li>
+                        <li class="last"><a href="#">Register</a></li>
                       </ul>
                     </fieldset>
 					</form>
@@ -109,10 +147,10 @@
                 <div class="inner">
                   <h4><b>Latest</b> News</h4>
                   <ul class="news">
-                    <li>Nov 11, 2011
+                    <li><a href="#">Nov 11, 2011</a>
                       <p>ABC Bank all set to add new features to the existing framework.</p>
                     </li>
-                    <li>Nov 01, 2011
+                    <li><a href="#">Nov 01, 2011</a>
                       <p>Three types of cards launched by the ABC Bank - Platinum, Gold & Silver.</p>
                     </li>
                   </ul>
@@ -131,7 +169,7 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="cards.html">Cards For You</a></li>
           <li><a href="services.html">Services For You</a></li>
-          <li><a href="contactus.html">Contact Us</a></li>
+          <li><a href="#">Contact Us</a></li>
           <li class="last"><a href="sitemap.html">Sitemap</a></li>
         </ul>
       </div>

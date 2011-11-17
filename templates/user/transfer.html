@@ -22,148 +22,157 @@
 <body id="page1">
 <!-- START PAGE SOURCE -->
 <div id="main">
-  <div id="header">
-    <div class="row-1">
-      <div class="fleft"><a href="#"><img src="images/logo.gif" alt="" /></a></div>
-      <div class="fright">
-		<p>Welcome {{ USR.personaldetail.first_name  }} {{ USR.personaldetail.last_name  }}  || <a href="/creditcard/home/index.html">Logout</a></p>
-      </div>
-    </div>
-    <div class="row-2">
-      <div class="left">
-        <ul>
-          <li><a href="#"><span>Home</span></a></li>
-          <li><a href="cards.html"><span>Cards For You</span></a></li>
-          <li><a href="services.html"><span>Services For You</span></a></li>
-          <li><a href="contact-us.html"><span>Contact Us</span></a></li>
-          <li class="last"><a href="sitemap.html"><span>Sitemap</span></a></li>
-        </ul>
-      </div>
-    </div>
-	<div class="row-3">
-      <div class="inside">
-        <h2>Credit is the Source <b>of Convinience</b></h2>
-        <p>No need to worry about carrying cash with you all the time... The one solution to all your money problems... Apply for the ABC Credit Card and enjoy a tension - free life.</p>
-      </div>
-    </div>
-  </div>
-  <div id="footer">
-    <div class="footer-nav">
-      <div class="left">
-        <ul>
-          <li><a href="index.html">My Accounts</a></li>
-          <li><a href="#.html">Payments/Transfers</a></li>
-          <li><a href="statement.html">Statements</a></li>
-          <li class="last"><a href="profile.html">My Profile</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div id="content">
-    <ul class="box-list">
-      <li><br /></li>
-	  <li><br /></li>
-	  <li><br /></li>
-	  <li><br /></li>
-	  <li><br /></li>
-      <li><br /></li>
-    </ul>
-    <div class="indent">
-      <div class="wrapper">
-        <div class="col-1">
-          
-              <form action="successtransfer.html" method="post"  style="clear:right; width:100%; overflow:hidden">
-			{% csrf_token %}
-		   <fieldset style="border:none; float:left">
-			<h4> Pay to account	</h4>
-            <p>
-			    <label for="USER_NAME">User Name:</label>
-			    <input size="38" name="USER_NAME" type="text">
-			  </p>
-			  <p>
-				<label for="PASSWORD">Password </label>
-				<input size="38" name="PASSWORD" type="password">
-			  
-			  </p>
-              <p>
-                <label for="CARD_NUMBER">Card Number</label>
-			    <input size="38" name="CARD_NUMBER" type="text">
-			  </p>
-   			  <p>
-                <label for="ACCOUNT_NUMBER">Transfer to Account</label>
-			    <input size="38" name="ACCOUNT_NUMBER" type="text">
-			  </p>
-			  <p>
-				<label for="AMOUNT">Amount </label>
-				<input size="38" name="AMOUNT" type="number">
-			  
-			  </p>
-            </p>
-            <input type="submit" value="Submit" />
-			</fieldset>
-          </form>
-          <h2>&nbsp;</h2>
+<div id="header">
+<div class="row-1">
+<div class="fleft"><a href="#"><img src="images/logo.gif"
+	alt="" /></a></div>
+
+<div class="fright">
+<p>Welcome {{ request.session.USER.personaldetail.first_name }}
+{{request.session.USER.personaldetail.last_name }}|| <a
+	href="/creditcard/user/logout.html">Logout</a></p>
 </div>
-        <div class="col-2">
-          <div class="box2">
-            <div class="border-top">
-              <div class="left-top-corner">
-                <div class="right-top-corner">
-                  <div class="inner">
-				    <h4><b>User</b> Sign-In</h4>
-					<form action="#" id="login-form">
-                    <fieldset>
-					  <p>Welcome </p>
-                      <ul>
-                        <li><a href="/creditcard/home/index.html">Logout</a></li>
-                      </ul>
-                    </fieldset>
-					</form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="box3">
-            <div class="right-bot-corner">
-              <div class="left-bot-corner">
-                <div class="inner">
-                  <h4><b>Latest</b> News</h4>
-                  <ul class="news">
-                    <li>Nov 11, 2011
-                      <p>ABC Bank all set to add new features to the existing framework.</p>
-                    </li>
-                    <li>Nov 01, 2011
-                      <p>Three types of cards launched by the ABC Bank - Platinum, Gold & Silver.</p>
-                    </li>
-                  </ul>
-				</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="footer">
-    <div class="footer-nav">
-      <div class="left">
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="cards.html">Cards For You</a></li>
-          <li><a href="services.html">Services For You</a></li>
-          <li><a href="contact-us.html">Contact Us</a></li>
-          <li class="last"><a href="sitemap.html">Sitemap</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footerlink">
-      <p class="lf"><b>Copyright &copy;</b> 2011 - Credit Cards Group - All Rights Reserved</p>
-      <p class="rf">Design by - <b> Aayush, Deepak, Kapil & Pankaj</b></p>
-      <div style="clear:both;"></div>
-    </div>
-  </div>
+</div>
+<div class="row-2">
+<div class="left">
+<ul>
+	<li><a href="index.html"><span>Home</span></a></li>
+	<li><a href="/creditcard/home/cards.html" target="_blank"><span>Cards
+	For You</span></a></li>
+	<li><a href="/creditcard/home/services.html" target="_blank"><span>Services
+	For You</span></a></li>
+	<li><a href="/creditcard/home/contactus.html" target="_blank"><span>Contact
+	Us</span></a></li>
+	<li class="last"><a href="/creditcard/home/sitemap.html"
+		target="_blank"><span>Sitemap</span></a></li>
+</ul>
+</div>
+</div>
+<div class="row-3">
+<div class="inside">
+<h2>Credit is the Source <b>of Convinience</b></h2>
+<p>No need to worry about carrying cash with you all the time... The
+one solution to all your money problems... Apply for the ABC Credit Card
+and enjoy a tension - free life.</p>
+</div>
+</div>
+</div>
+<div id="footer">
+<div class="footer-nav">
+<div class="left">
+<ul>
+	<li><a href="index.html">My Accounts</a></li>
+	<li><a href="transfer.html">Payments/Transfers</a></li>
+	<li><a href="statement.html">Statements</a></li>
+	<li class="last"><a href="profile.html">My Profile</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="content">
+<ul class="box-list">
+	<li><br />
+	</li>
+	<li><br />
+	</li>
+	<li><br />
+	</li>
+	<li><br />
+	</li>
+	<li><br />
+	</li>
+	<li><br />
+	</li>
+</ul>
+<div class="indent">
+<div class="wrapper">
+
+<div class="col-1">
+<form action="successtransfer.html" method="post" style="clear: right; width: 100%; overflow: hidden">
+{% csrf_token %}
+<fieldset style="border: none; float: left">
+<h4>Pay to account</h4>
+<p><label for="user_name">User Name:</label> <input size="38" name="user_name" type="text"/></p>
+<p><label for="password">Password </label> <input size="38" name="password" type="password"></p>
+<p><label for="card_number">Card Number</label> <input size="38" name="card_number" type="text"></p>
+<p><label for="account_number">Transfer to Account</label> <input size="38" name="account_number" type="text"></p>
+<p><label for="amount">Amount </label> <input size="38" name="amount" type="number"></p>
+<label for="description">Remarks:</label> <input size="100" name="description" type="text">
+</p>
+</p>
+<input type="submit" value="Submit" /></fieldset>
+</form>
+<h2>&nbsp;</h2>
+</div>
+<div class="col-2">
+<div class="box2">
+<div class="border-top">
+<div class="left-top-corner">
+<div class="right-top-corner">
+<div class="inner">
+<h4><b>User</b> Sign-In</h4>
+<form action="#" id="login-form">
+<fieldset>
+<p>Welcome <b>
+{{request.session.USER.personaldetail.first_name}}</b> <b>
+{{request.session.USER.personaldetail.last_name }}</b></p>
+<ul>
+	<li><a href="/creditcard/user/logout.html">Logout</a></li>
+</ul>
+</fieldset>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="box3">
+<div class="right-bot-corner">
+<div class="left-bot-corner">
+<div class="inner">
+<h4><b>Latest</b> News</h4>
+<ul class="news">
+	<li>Nov 11, 2011
+	<p>ABC Bank all set to add new features to the existing framework.</p>
+	</li>
+	<li>Nov 01, 2011
+	<p>Three types of cards launched by the ABC Bank - Platinum, Gold &
+	Silver.</p>
+	</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div class="footer-nav">
+<div class="left">
+<ul>
+	<li><a href="/creditcard/home/index.html" target="_blank">Home</a></li>
+	<li><a href="/creditcard/home/cards.html" target="_blank">Cards
+	For You</a></li>
+	<li><a href="/creditcard/home/services.html" target="_blank">Services
+	For You</a></li>
+	<li><a href="/creditcard/home/contactus.html" target="_blank">Contact
+	Us</a></li>
+	<li class="last"><a href="/creditcard/home/sitemap.html"
+		target="_blank">Sitemap</a></li>
+</ul>
+</div>
+</div>
+<div class="footerlink">
+<p class="lf"><b>Copyright &copy;</b> 2011 - Credit Cards Group -
+All Rights Reserved</p>
+<p class="rf">Design by - <b> Aayush, Deepak, Kapil & Pankaj</b></p>
+<div style="clear: both;"></div>
+</div>
+</div>
 </div>
 <script type="text/javascript"> Cufon.now(); </script>
+</body>
 <!-- END PAGE SOURCE -->
 </html>

@@ -19,6 +19,7 @@
 <link href="css/ie6.css" rel="stylesheet" type="text/css" />
 <![endif]-->
 </head>
+
 <body id="page1">
 <!-- START PAGE SOURCE -->
 <div id="main">
@@ -161,10 +162,10 @@ together on this exciting road to Transformation.</p>
 <form action="../user/" id="login-form" method="post">
 {% csrf_token %}
 <fieldset>
-<div class="field"><label for="USER_NAME">User Name: </label> <input
-	name="USER_NAME" type="text"></div>
-<div class="field"><label for="PASSWORD">Password: </label> <input
-	name="PASSWORD" type="password"></div>
+<div class="field"><label for="username">User Name: </label> <input
+	name="username" type="text"></div>
+<div class="field"><label for="password">Password: </label> <input
+	name="password" type="password"></div>
 <div class="field1"><label class="extra">Remember Me:</label> <input
 	type="checkbox" class="extra" /> <input type="submit" value="Log In" /></div>
 <!--<a href="user/success/"><em><b>Log In<span>Log In</span></b></em></a></div>-->
@@ -222,5 +223,6 @@ All Rights Reserved</p>
 </div>
 </div>
 <script type="text/javascript"> Cufon.now(); </script>
+</body>
 <!-- END PAGE SOURCE -->
 </html>

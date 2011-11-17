@@ -3,10 +3,60 @@ from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
 from BankCreditCard.creditcard.models import User, Card, Statement, BankDetail, EmploymentDetail, PersonalDetail
-import random
-import datetime
+import random, datetime
+
+def index(request):
+	"""Render home page of the webiste """
+	return render_to_response('home/index.html', context_instance=RequestContext(request))
+	
+def cards(request):
+	"""Render home page of the webiste """
+	return render_to_response('home/cards.html', context_instance=RequestContext(request))
+
+def services(request):
+	"""Render home page of the webiste """
+	return render_to_response('home/services.html', context_instance=RequestContext(request))
+	
+def contact(request):
+	"""Render home page of the webiste """
+	return render_to_response('home/contactus.html', context_instance=RequestContext(request))
+	
+def sitemap(request):
+	"""Render home page of the webiste """
+	return render_to_response('home/sitemap.html', context_instance=RequestContext(request))
+	
+def register(request):
+	"""Render home page of the webiste """
+	return render_to_response('register/index.html', context_instance=RequestContext(request))
+
+def userindex(request):
+	"""Render home page of the webiste """
+	return render_to_response('user/index.html', context_instance=RequestContext(request))
+	
+def userprofile(request):
+	"""Render home page of the webiste """
+	return render_to_response('user/profile.html', context_instance=RequestContext(request))
+
+def userstatement(request):
+	"""Render home page of the webiste """
+	return render_to_response('user/statement.html', context_instance=RequestContext(request))
+
+def usertransfer(request):
+	"""Render home page of the webiste """
+	return render_to_response('user/transfer.html', context_instance=RequestContext(request))
+
+def access_details(request, USER):	
+	"""Render home page of the webiste """
+	return render_to_response('register/success.html', {'USER': USER})	
 
 def max_credit_limit(card_type):
+	"""
+	Function is used to determine the maximum credit limit of a credit card given the type of card.
+	Arguments:
+	 card_type -- Type of the card
+	 
+	 Returns: Maximum limit of the credit card
+	"""
 	if(card_type == 'Platinum'):
 		return 10000
 	elif(card_type == 'Gold'):
@@ -15,32 +65,72 @@ def max_credit_limit(card_type):
 		return 2000	
 	
 def pay_to_account(request):
-	user_name = request.POST['USER_NAME']
-	password = request.POST['PASSWORD']
-	card_number = request.POST['CARD_NUMBER']
-	account_number = request.POST['ACCOUNT_NUMBER']
-	amount = request.POST['AMOUNT']	
+	"""
+	Function is the basic API for the credit card system.
+	Arguments: request
+	user_name -- Name of user as in credit card system
+	password -- Four digit pin code of user
+	card_number -- Card number of Card given to user.
+	account_number -- Account to which amount is to be transfered
+	amount -- Amount of money to transfer
+	description -- Remark provided by user
+	"""
+	user_name = request.POST['user_name']
+	password = request.POST['password']
+	card_number = request.POST['card_number']
+	account_number = request.POST['account_number']
+	description = request.POST['description']
+	amount = request.POST['amount']	
+	
 	try:
-		USR = User.objects.get(user_name=user_name, password=password)
+		USER = User.objects.get(user_name=user_name, password=password)
 		CARD = Card.objects.get(card_number=card_number)
 	except (KeyError, User.DoesNotExist):
 		return HttpResponse("ERROR: user does not exits ")
 	else:
-		MAX_CREDIT_LIMIT = max_credit_limit(USR.card.card_type)
-		if(USR.card.credited_amount + float(amount) > MAX_CREDIT_LIMIT):
-			return HttpResponse(str(USR.card.credited_amount + float(amount)) + "ERROR: credit limit exceeded ")
-		USR.card.credited_amount += float(amount)
+		MAX_CREDIT_LIMIT = max_credit_limit(USER.card.card_type)
+		if(USER.card.credited_amount + float(amount) > MAX_CREDIT_LIMIT):
+			return HttpResponse(str(USER.card.credited_amount + float(amount)) + "ERROR: credit limit exceeded ")
+		USER.card.credited_amount += float(amount)
+		account_number -= amount;
 		#Using Account API add amount to the given account number
-		generate_statement(CARD, amount, account_number)
+		date = datetime.datetime.now()
+		generate_statement(CARD, date, amount, description)
 		return HttpResponseRedirect('transfer.html')
 
-def generate_statement(CARD, amount, to_account):
-	transaction_id = random.randint(1000, 2000)
-	stmt = Statement(transaction_date=datetime.datetime.now(), amount=amount, to_account=to_account , transaction_id=transaction_id , card=CARD)	
-	stmt.save()
+def generate_statement(CARD, date, amount, description):
+	"""
+	Function is used to save user statements of transaction.
+	 
+	@type CARD: Object
+	@param CARD: Object of Card class 
+	@type date: date 
+	@param date: Date of Transaction
+	@type amount: Number 
+	@param amount: Amount of the statement
+	@type description: text 
+	@param description: Remarks of transaction
+	"""
+	transaction_id = str(datetime.datetime.now())
+	s = Statement(transaction_date=date, amount=amount, transaction_id=transaction_id , description=description, card=CARD)
+	s.save()
 
 def display_statement(request):	
-	card_number = request.POST['CARD_NUMBER']
+	"""
+	Function is used to display statement
+	
+	Arguments: request
+	
+	@type card_number: number 
+	@param card_number: Card Number of user Credit Card
+	@type from_date: date 
+	@param from_date: Date after which statements are to be displayed
+	@type to_date: date 
+	@param to_date: Date from which statements are to be displayed
+	
+	It appends statements to list of statements.
+	"""
+	card_number = request.POST['card_number']
 	#date_from = request.POST['FROM_DATE']
 	#date_to = request.POST['TO_DATE']
 	CARD = Card.objects.get(card_number=card_number)
@@ -51,72 +141,41 @@ def display_statement(request):
 		list_of_statement.append(statement) 
 	return render_to_response('user/successstatement.html', {'list_of_statement': list_of_statement})
 
-def index(request):
-	return render_to_response('home/index.html', context_instance=RequestContext(request))
-	
-def cards(request):
-	return render_to_response('home/cards.html', context_instance=RequestContext(request))
-
-def services(request):
-	return render_to_response('home/services.html', context_instance=RequestContext(request))
-	
-def contact(request):
-	return render_to_response('home/contact-us.html', context_instance=RequestContext(request))
-	
-def sitemap(request):
-	return render_to_response('home/sitemap.html', context_instance=RequestContext(request))
-	
-def register(request):
-	return render_to_response('register/index.html', context_instance=RequestContext(request))
-
 def login(request):
+	"""
+	Function is used to verify user at time of login and store session variable
+	@type username: text
+	@param username: Username of User
+	@type password: password
+	@param password: Password of User    
+	"""
 	if request.method != 'POST':
 		raise Http404('Only POSTs are allowed')
-	ld_uname = request.POST['USER_NAME']
-	ld_pswd = request.POST['PASSWORD']
+	ld_uname = request.POST['username']
+	ld_pswd = request.POST['password']
 	try:
-		USR = User.objects.get(user_name=ld_uname, password=ld_pswd)
-		request.session['USER'] = USR 
+		USER = User.objects.get(user_name=ld_uname, password=ld_pswd)
+		request.session['USER'] = USER 
 	except (KeyError, User.DoesNotExist):
 		return HttpResponse("Username and Password you provide does not match, Please enter again")
 	else:
 		return HttpResponseRedirect('index.html')
 	
 def logout(request):
+	"""
+	Function logouts from user session by deleting the session variable.
+	"""
 	try:
-		del request.session['user_name']
+		del request.session['USER']
 	except KeyError:
 		pass
-	return HttpResponse("You're logged out.")
-
-'''
-def verify_user(request):
-    ld_uname = request.POST['USER_NAME']
-    ld_pswd = request.POST['PASSWORD']
-    try:
-        USR = User.objects.get(user_name=ld_uname, password=ld_pswd)
-    except (KeyError, User.DoesNotExist):
-        return HttpResponse("ERROR ")
-    else:
-        return render_to_response('user/index.html', {'USR': USR})
-'''
-
-def userindex(request):
-	return render_to_response('user/index.html', context_instance=RequestContext(request))
+	return HttpResponseRedirect('/creditcard/home/index.html')
 	
-def userprofile(request):
-	return render_to_response('user/profile.html', context_instance=RequestContext(request))
-
-def userstatement(request):
-	return render_to_response('user/statement.html', context_instance=RequestContext(request))
-
-def usertransfer(request):
-	return render_to_response('user/transfer.html', context_instance=RequestContext(request))
-
-def access_details(request, USR):	
-	return render_to_response('register/success.html', {'USR': USR})	
-	
-def process(request):
+def registerprocess(request):
+	""" 
+	It process the register process of user.
+	It takes all fields from user and save them to the database.
+	"""
 	try:
 		ld_uname = request.POST['USER_NAME']
 		ld_pswd = request.POST['PASSWORD']
@@ -150,18 +209,15 @@ def process(request):
 	except (KeyError):
 		return HttpResponse("ERROR ")
 	else:
-		#Code for login account app for verification of user
-		usr = User.objects.create(user_name=ld_uname, password=ld_pswd, verification_flag='Not Verified')
-		usr.save()
-		pd = PersonalDetail(first_name=pd_firstname, last_name=pd_lastname, gender=pd_gender, education=pd_education, father_name=pd_fathername, mother_name=pd_mothername, current_address=pd_currentaddress, city=pd_city, pincode=pd_pincode, permanent_address=pd_permanentaddress, telephone=pd_telephone, mobile=pd_mobile, user=usr)				
+		USER = User.objects.create(user_name=ld_uname, password=ld_pswd, verification_flag='Not Verified')
+		USER.save()
+		pd = PersonalDetail(first_name=pd_firstname, last_name=pd_lastname, gender=pd_gender, education=pd_education, father_name=pd_fathername, mother_name=pd_mothername, current_address=pd_currentaddress, city=pd_city, pincode=pd_pincode, permanent_address=pd_permanentaddress, telephone=pd_telephone, mobile=pd_mobile, user=USER)				
 		pd.save()
-		ed = EmploymentDetail(company_type=ed_companytype, designation=ed_designation, income=ed_income, work_years=ed_workyears, name=ed_name, office_address=ed_officeaddress, city=ed_city, pincode=ed_pincode, email_id=ed_emailid, user=usr)
+		ed = EmploymentDetail(company_type=ed_companytype, designation=ed_designation, income=ed_income, work_years=ed_workyears, name=ed_name, office_address=ed_officeaddress, city=ed_city, pincode=ed_pincode, email_id=ed_emailid, user=USER)
 		ed.save()
-		bd = BankDetail(account_number=bd_account_number, bankname=bd_bankname, branch_address=bd_branch_address, account_type=bd_account_type, user=usr)
+		bd = BankDetail(account_number=bd_account_number, bankname=bd_bankname, branch_address=bd_branch_address, account_type=bd_account_type, user=USER)
 		bd.save()
-		cd = Card(card_type=cd_cardtype, interest=343, credited_amount=9078, user=usr, card_number=card_number)	
+		cd = Card(card_type=cd_cardtype, interest=343, credited_amount=9078, user=USER, card_number=card_number)	
 		cd.save()		
-		return render_to_response('register/success.html', {'USR': usr})
+		return render_to_response('register/success.html', {'USER': USER})
 		
-
-				
