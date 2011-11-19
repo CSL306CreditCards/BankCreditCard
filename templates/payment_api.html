@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>ABC Bank | Register</title>
+</head>
+<body>
+
+<form action="/creditcard/successpayment_api.html/{{account_no}}/{{amount}}/" method="post">
+{%csrf_token %}
+
+<h4>Please provide your card information</h4>
+<p><label for="USER_NAME">Name:</label> <input size="38"
+	name="USER_NAME" type="text"></p>
+<p><label for="PASSWORD">Security Code:</label> <input size="38"
+	name="PASSWORD" type="password"></p>
+<p><label for="CARD_NUMBER">Card Number: </label> <input size="38"
+	name="CARD_NUMBER" type="text"> 
+	<label for="EXPIRY_DATE"><br /><br />Expiry Date: </label> <input size="38" name="EXPIRY_DATE" type="date"> 
+<br />
+</label>
+</p>
+<input type="submit" value="Submit" />
+</form>
+</body>
+</html>

@@ -6,47 +6,64 @@ from BankCreditCard.creditcard.models import User, Card, Statement, BankDetail, 
 import random, datetime
 
 def index(request):
-	"""Render home page of the webiste """
+	"""Render home page of the website """
 	return render_to_response('home/index.html', context_instance=RequestContext(request))
 	
 def cards(request):
-	"""Render home page of the webiste """
+	"""Render home page of the website """
 	return render_to_response('home/cards.html', context_instance=RequestContext(request))
 
 def services(request):
-	"""Render home page of the webiste """
+	"""Render home page of the website """
 	return render_to_response('home/services.html', context_instance=RequestContext(request))
 	
+def userservices(request):
+	"""Render home page of the website """
+	return render_to_response('user/services.html', context_instance=RequestContext(request))
+
 def contact(request):
-	"""Render home page of the webiste """
+	"""Render home page of the website """
 	return render_to_response('home/contactus.html', context_instance=RequestContext(request))
 	
 def sitemap(request):
-	"""Render home page of the webiste """
-	return render_to_response('home/sitemap.html', context_instance=RequestContext(request))
+	"""Render home page of the website """
+	return render_to_response('home/services.html', context_instance=RequestContext(request))
+
+def platinum(request):
+	"""Render home page of the website """
+	return render_to_response('home/platinum.html', context_instance=RequestContext(request))
+
+def gold(request):
+	"""Render home page of the website """
+	return render_to_response('home/gold.html', context_instance=RequestContext(request))
+
+def silver(request):
+	"""Render home page of the website """
+	return render_to_response('home/silver.html', context_instance=RequestContext(request))
 	
+
 def register(request):
-	"""Render home page of the webiste """
+	"""Render home page of the website """
 	return render_to_response('register/index.html', context_instance=RequestContext(request))
 
 def userindex(request):
-	"""Render home page of the webiste """
+	"""Render home page of the website """
 	return render_to_response('user/index.html', context_instance=RequestContext(request))
 	
 def userprofile(request):
-	"""Render home page of the webiste """
+	"""Render home page of the website """
 	return render_to_response('user/profile.html', context_instance=RequestContext(request))
 
 def userstatement(request):
-	"""Render home page of the webiste """
+	"""Render home page of the website """
 	return render_to_response('user/statement.html', context_instance=RequestContext(request))
 
 def usertransfer(request):
-	"""Render home page of the webiste """
+	"""Render home page of the website """
 	return render_to_response('user/transfer.html', context_instance=RequestContext(request))
 
 def access_details(request, USER):	
-	"""Render home page of the webiste """
+	"""Render home page of the website """
 	return render_to_response('register/success.html', {'USER': USER})	
 
 def max_credit_limit(card_type):
@@ -63,7 +80,19 @@ def max_credit_limit(card_type):
 		return 5000
 	elif(card_type == 'Silver'):
 		return 2000	
+
+def payment_api(request, account_no,amount):
+	return render_to_response('payment_api.html',{'account_no':account_no,'amount':amount}, context_instance=RequestContext(request))
 	
+def successpayment_api(request,account_no,amount):
+	user_name = request.POST['USER_NAME']
+	password = request.POST['PASSWORD']
+	card_number = request.POST['CARD_NUMBER']
+	expiry_date = request.POST['EXPIRY_DATE']
+	#authentication and transfer
+	#return HttpResponse("heyhey")
+	return render_to_response('successpayment_api.html')
+
 def pay_to_account(request):
 	"""
 	Function is the basic API for the credit card system.

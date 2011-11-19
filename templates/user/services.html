@@ -81,20 +81,32 @@ and enjoy a tension - free life.</p>
 <div class="indent">
 <div class="wrapper">
 <div class="col-1">
-<p>Welcome {{ request.session.USER.personaldetail.first_name }}
-{{request.session.USER.personaldetail.last_name }}</p>
-<b>Card Detail</b> <br />
-<br />
-<p>Credit Card Number {{ request.session.USER.card.card_number }}<br />
-Credit Card Type {{ request.session.USER.card.card_type }}<br />
-Credited Amount {{ request.session.USER.card.credited_amount }} <br />
-Interest {{request.session.USER.card.interest }}</p>
-<b> Account Details </b> <br />
-<br />
-<p>Account Number{{ request.session.USER.bankdetail.account_number}}<br />
-Bank Name {{ request.session.USER.bankdetail.bankname }}<br />
-Branch Address {{request.session.USER.bankdetail.branch_address}}<br />
-Account Type {{ request.session.USER.bankdetail.account_type }}</p>
+<p>
+<b>Auto Pay</b>
+<form action="successstatement.html" method="post"
+	style="clear: right; width: 100%; overflow: hidden">
+{% csrf_token %}
+<fieldset style="border: none; float: left">
+<p><label for="card_number">Card Number:</label> 
+  	<input size="38"
+	name="card_number" type="text"></p>
+<p>
+  <label for="account_no">To Account:   </label> <input size="38" name="account_no"
+	type="text"></p>
+<p>  Installment Period: 
+  <select name = 'installment' >
+    <option value="monthly">Monthly</option>
+    <option value="bimonthly">Bimonthly</option>
+    <option value="quaterly">Quaterly</option>
+  </select>
+</p>
+<p>	
+  
+  <input type="submit" value="Submit" />
+</p>
+</fieldset>
+</form>
+</p>
 </div>
 <div class="col-2">
 <div class="box2">
