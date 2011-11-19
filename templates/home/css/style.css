@@ -38,6 +38,49 @@ img {
 ul, ol {
 	list-style:none;
 }
+
+
+
+#register-form {
+	clear:right;
+	background:#000
+	width:100%;
+	overflow:hidden;
+	color:red;
+}
+#register-form {
+	clear:right;
+	background:#000
+	width:100%;
+	overflow:hidden;
+	color:red;
+}
+
+#register-form fieldset {
+	border:10;
+	float:left;
+	color:red;
+}
+#register-form p {
+	clear:both;
+	color:red;
+}
+#register-form label {
+	float:left;
+	width:97px;
+	line-height:18px;
+	padding-bottom:8px;
+	font-weight:bold;
+	color:#454545;
+}
+#register-form  input {
+	width:265px;
+	padding:1px 0 1px 3px;
+	border:1px solid #ccc;
+	color:#70635b;
+}
+
+
 #main {
 	width:940px;
 	margin:0 auto;
@@ -111,6 +154,10 @@ ul, ol {
 	font-weight:bold;
 	float:left;
 	width:93px;
+}
+#login-form label .label1{
+	color:#000;
+
 }
 #login-form label.extra {
 	font-weight:normal;
@@ -213,6 +260,7 @@ ul, ol {
 #contacts-form .link1 {
 	float:right;
 }
+
 .box-list {
 	width:100%;
 	overflow:hidden;
@@ -337,7 +385,12 @@ h4 {
 	line-height:1.2em;
 	margin-bottom:10px;
 }
-h3 b, h4 b {
+h5 {
+	font-size:16px;
+	line-height:1.2em;
+	margin-bottom:10px;
+}
+h3 b, h4 b, h5 b {
 	color:#1f7dd2;
 }
 .link1 {
