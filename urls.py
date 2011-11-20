@@ -5,8 +5,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^creditcard/payment_api.html/account_no=(?P<account_no>\d+)/amount=(?P<amount>\d+)/$', 'creditcard.views.payment_api'),
-    (r'^creditcard/successpayment_api.html/(?P<account_no>\d+)/(?P<amount>\d+)/$', 'creditcard.views.successpayment_api'),
+    (r'^creditcard/api/payment_api.html/account_no=(?P<account_no>\d+)/amount=(?P<amount>\d+)/$', 'creditcard.views.payment_api'),
+    (r'^creditcard/api/successpayment_api.html/(?P<account_no>\d+)/(?P<amount>\d+)/$', 'creditcard.views.successpayment_api'),
     (r'^creditcard/home/$', 'creditcard.views.index'),
     (r'^creditcard/home/index.html$', 'creditcard.views.index'),
 	(r'^creditcard/home/userDoesNotExist/$', 'creditcard.views.userDoesNotExistIndex'),
@@ -27,10 +27,11 @@ urlpatterns = patterns('',
 	(r'^creditcard/user/statement.html$', 'creditcard.views.userstatement'),
 	(r'^creditcard/user/transfer.html$', 'creditcard.views.usertransfer'),
     (r'^creditcard/user/services.html$', 'creditcard.views.userservices'),
+    (r'^creditcard/user/successautopay.html$', 'creditcard.views.autopay'),
 	(r'^creditcard/user/successtransfer.html$', 'creditcard.views.pay_to_account'),
 	(r'^creditcard/user/successstatement.html$', 'creditcard.views.display_statement'),
     (r'^creditcard/user/logout.html$', 'creditcard.views.logout'),
-	(r'^creditcard/sms_api/number=(?P<number>\d+)/message=(?P<message>.+)','creditcard.views.send_sms'),
+	(r'^creditcard/sms_api/number=(?P<number>\d+)/message=(?P<message>.+)', 'creditcard.views.send_sms'),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
 	url(r'^admin/', include(admin.site.urls)),
 )
