@@ -4,6 +4,8 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
 from BankCreditCard.creditcard.models import User, Card, Statement, BankDetail, EmploymentDetail, PersonalDetail
 import random, datetime
+import urllib
+import unicodedata
 
 def index(request):
 	"""Render home page of the website """
@@ -186,9 +188,12 @@ def login(request):
 		USER = User.objects.get(user_name=ld_uname, password=ld_pswd)
 		request.session['USER'] = USER 
 	except (KeyError, User.DoesNotExist):
-		return HttpResponse("Username and Password you provide does not match, Please enter again")
+		return HttpResponseRedirect('/creditcard/home/userDoesNotExist/')
 	else:
-		return HttpResponseRedirect('index.html')
+		return HttpResponseRedirect('/creditcard/user/index.html')
+		
+def userDoesNotExistIndex(request):
+	return render_to_response('home/index.html', {'Error':"The User Name or Password you entered is incorrect."}, context_instance=RequestContext(request))
 	
 def logout(request):
 	"""
@@ -200,41 +205,52 @@ def logout(request):
 		pass
 	return HttpResponseRedirect('/creditcard/home/index.html')
 	
+def userNameExistError(request):
+	return render_to_response('register/index.html', {'Error':"user Name already exists please try a different username"}, context_instance=RequestContext(request))
+
+	
 def registerprocess(request):
 	""" 
 	It process the register process of user.
 	It takes all fields from user and save them to the database.
 	"""
+
 	try:
 		ld_uname = request.POST['USER_NAME']
-		ld_pswd = request.POST['PASSWORD']
-		pd_firstname = request.POST['FIRST_NAME']
-		pd_lastname = request.POST['LAST_NAME']
-		pd_gender = request.POST['GENDER']
-		pd_education = request.POST['EDUCATION']
-		pd_fathername = request.POST['FATHER_NAME']
-		pd_mothername = request.POST['MOTHER_NAME']
-		pd_currentaddress = request.POST['CURRENT_ADDRESS']
-		pd_city = request.POST['PD_CITY']
-		pd_pincode = request.POST['PD_PINCODE']
-		pd_permanentaddress = request.POST['PERMANENT_ADDRESS']
-		pd_telephone = request.POST['TELEPHONE']
-		pd_mobile = request.POST['MOBILE']
-		ed_companytype = request.POST['COMPANY_TYPE']
-		ed_designation = request.POST['DESIGNATION']
-		ed_income = request.POST['INCOME']
-		ed_workyears = request.POST['WORK_YEARS']
-		ed_name = request.POST['NAME']
-		ed_officeaddress = request.POST['OFFICE_ADDRESS']
-		ed_city = request.POST['ED_CITY']
-		ed_pincode = request.POST['ED_PINCODE']
-		ed_emailid = request.POST['EMAIL_ID']
-		bd_account_number = request.POST['ACCOUNT_NUMBER']
-		bd_bankname = request.POST['BANK_NAME']
-		bd_branch_address = request.POST['BRANCH_ADDRESS']
-		bd_account_type = request.POST['ACCOUNT_TYPE']
-		cd_cardtype = request.POST['CARD_TYPE']
-		card_number = random.randint(10000, 20000)
+		try:
+			USER = User.objects.get(user_name=ld_uname)
+		except (KeyError, User.DoesNotExist):
+			
+			ld_pswd = request.POST['PASSWORD']
+			pd_firstname = request.POST['FIRST_NAME']
+			pd_lastname = request.POST['LAST_NAME']
+			pd_gender = request.POST['GENDER']
+			pd_education = request.POST['EDUCATION']
+			pd_fathername = request.POST['FATHER_NAME']
+			pd_mothername = request.POST['MOTHER_NAME']
+			pd_currentaddress = request.POST['CURRENT_ADDRESS']
+			pd_city = request.POST['PD_CITY']
+			pd_pincode = request.POST['PD_PINCODE']
+			pd_permanentaddress = request.POST['PERMANENT_ADDRESS']
+			pd_telephone = request.POST['TELEPHONE']
+			pd_mobile = request.POST['MOBILE']
+			ed_companytype = request.POST['COMPANY_TYPE']
+			ed_designation = request.POST['DESIGNATION']
+			ed_income = request.POST['INCOME']
+			ed_workyears = request.POST['WORK_YEARS']
+			ed_name = request.POST['NAME']
+			ed_officeaddress = request.POST['OFFICE_ADDRESS']
+			ed_city = request.POST['ED_CITY']
+			ed_pincode = request.POST['ED_PINCODE']
+			ed_emailid = request.POST['EMAIL_ID']
+			bd_account_number = request.POST['ACCOUNT_NUMBER']
+			bd_bankname = request.POST['BANK_NAME']
+			bd_branch_address = request.POST['BRANCH_ADDRESS']
+			bd_account_type = request.POST['ACCOUNT_TYPE']
+			cd_cardtype = request.POST['CARD_TYPE']
+			card_number = random.randint(10000, 20000)
+		else:	
+			return HttpResponseRedirect('/creditcard/register/userNameExistError/')
 	except (KeyError):
 		return HttpResponse("ERROR ")
 	else:
@@ -248,5 +264,15 @@ def registerprocess(request):
 		bd.save()
 		cd = Card(card_type=cd_cardtype, interest=343, credited_amount=9078, user=USER, card_number=card_number)	
 		cd.save()		
-		return render_to_response('register/success.html', {'USER': USER})
+		return HttpResponseRedirect('/creditcard/home/registeredSuccessfully/')
 		
+def registeredSuccessfully(request):
+	return render_to_response('home/index.html', {'Error':"You are successfully registered and ready for first time login"}, context_instance=RequestContext(request))
+	
+def send_sms(request,number,message):
+	number=unicodedata.normalize('NFKD', number).encode('ascii','ignore')
+	message=unicodedata.normalize('NFKD', message).encode('ascii','ignore')
+	output=urllib.urlopen('http://ubaid.tk/sms/sms.aspx?uid=9478017939&pwd=4321&phone='+number+'&msg='+message+'&provider=way2sms').read()
+	print output
+	#return render_to_response("api_output.html",{'output':output})	
+	return HttpResponse(output)
