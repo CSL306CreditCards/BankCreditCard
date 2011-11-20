@@ -2,7 +2,7 @@
 from django.template import RequestContext
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render_to_response
-from BankCreditCard.creditcard.models import User, Card, Statement, BankDetail, EmploymentDetail, PersonalDetail
+from BankCreditCard.creditcard.models import User, Card, Statement, BankDetail, EmploymentDetail, PersonalDetail, Autopay
 import random, datetime
 import urllib
 import unicodedata
@@ -21,8 +21,12 @@ def services(request):
 	
 def userservices(request):
 	"""Render home page of the website """
-	return render_to_response('user/services.html', context_instance=RequestContext(request))
-
+	user = request.session['USER']
+	list_of_autopay = []
+	for auto in user.autopay_set.all():
+		list_of_autopay.append(auto)
+	return render_to_response('user/services.html', {'list_of_autopay': list_of_autopay} , context_instance=RequestContext(request))
+	
 def contact(request):
 	"""Render home page of the website """
 	return render_to_response('home/contactus.html', context_instance=RequestContext(request))
@@ -43,7 +47,6 @@ def silver(request):
 	"""Render home page of the website """
 	return render_to_response('home/silver.html', context_instance=RequestContext(request))
 	
-
 def register(request):
 	"""Render home page of the website """
 	return render_to_response('register/index.html', context_instance=RequestContext(request))
@@ -77,24 +80,61 @@ def max_credit_limit(card_type):
 	 Returns: Maximum limit of the credit card
 	"""
 	if(card_type == 'Platinum'):
-		return 10000
+		return 100000
 	elif(card_type == 'Gold'):
-		return 5000
+		return 50000
 	elif(card_type == 'Silver'):
-		return 2000	
+		return 20000	
 
-def payment_api(request, account_no,amount):
-	return render_to_response('payment_api.html',{'account_no':account_no,'amount':amount}, context_instance=RequestContext(request))
+def payment_api(request, account_no, amount):
+	return render_to_response('api/payment_api.html', {'account_no':account_no, 'amount':amount}, context_instance=RequestContext(request))
 	
-def successpayment_api(request,account_no,amount):
+def successpayment_api(request, account_no, amount):
 	user_name = request.POST['USER_NAME']
 	password = request.POST['PASSWORD']
 	card_number = request.POST['CARD_NUMBER']
 	expiry_date = request.POST['EXPIRY_DATE']
 	#authentication and transfer
 	#return HttpResponse("heyhey")
-	return render_to_response('successpayment_api.html')
+	return render_to_response('api/successpayment_api.htm')
 
+def adminAutoPay():
+	for user in User.objects.get():
+		for autopay in user.autopay_set.all():
+			if (autopay.date == datetime.datetime.now()):
+				card_no = user.card.card_number
+				amount = autopay.amount
+				account_to = autopay.account_to
+				MAX_CREDIT_LIMIT = max_credit_limit(user.card.card_type)
+				if(user.card.credited_amount + float(amount) > MAX_CREDIT_LIMIT):
+					return HttpResponse(str(user.card.credited_amount + float(amount)) + "ERROR: credit limit exceeded ")
+				user.card.credited_amount += float(amount)
+				user.card.save()
+				#Using Online Transaction API add amount to the given account number
+				date = datetime.datetime.now()
+				generate_statement(user.card, date, amount, 'Autopay')
+	
+def autopay(request):
+	card_number = request.POST['card_number']
+	account_no = request.POST['account_no']
+	amount = request.POST['amount']
+	description = request.POST['description']
+	date = request.POST['date']
+	y = int(date[0:4])
+	m = int(date[5:7])
+	d = int(date[8:10])
+	date = datetime.datetime(y, m, d)
+	installment = request.POST['installment']
+	USER = request.session['USER']
+	try:
+		Card.objects.get(card_number=card_number)
+	except (KeyError, Card.DoesNotExist):
+		return HttpResponse("ERROR: Incorrect Card Number ")
+	else:
+		a = Autopay(to_account=account_no, description=description, date=date, amount=amount, installment=installment, user=USER)				
+		a.save()
+		return HttpResponseRedirect('services.html')
+		
 def pay_to_account(request):
 	"""
 	Function is the basic API for the credit card system.
@@ -123,7 +163,7 @@ def pay_to_account(request):
 		if(USER.card.credited_amount + float(amount) > MAX_CREDIT_LIMIT):
 			return HttpResponse(str(USER.card.credited_amount + float(amount)) + "ERROR: credit limit exceeded ")
 		USER.card.credited_amount += float(amount)
-		account_number -= amount;
+		USER.card.save()
 		#Using Account API add amount to the given account number
 		date = datetime.datetime.now()
 		generate_statement(CARD, date, amount, description)
@@ -162,14 +202,22 @@ def display_statement(request):
 	It appends statements to list of statements.
 	"""
 	card_number = request.POST['card_number']
-	#date_from = request.POST['FROM_DATE']
-	#date_to = request.POST['TO_DATE']
+	date_from = request.POST['from_date']
+	y = int(date_from[0:4])
+	m = int(date_from[5:7])
+	d = int(date_from[8:10])
+	date_from = datetime.datetime(y, m, d)
+	date_to = request.POST['to_date']
+	y = int(date_to[0:4])
+	m = int(date_to[5:7])
+	d = int(date_to[8:10])
+	date_to = datetime.datetime(y, m, d)
 	CARD = Card.objects.get(card_number=card_number)
 	list_of_statement = []
 	for statement in CARD.statement_set.all():
-		#date = statement.transaction_date
-		#if((date >= date_from) & (date <= date_to)):
-		list_of_statement.append(statement) 
+		date = statement.transaction_date
+		if((date >= date_from) & (date <= date_to)):
+			list_of_statement.append(statement) 
 	return render_to_response('user/successstatement.html', {'list_of_statement': list_of_statement})
 
 def login(request):
@@ -191,7 +239,7 @@ def login(request):
 		return HttpResponseRedirect('/creditcard/home/userDoesNotExist/')
 	else:
 		return HttpResponseRedirect('/creditcard/user/index.html')
-		
+	
 def userDoesNotExistIndex(request):
 	return render_to_response('home/index.html', {'Error':"The User Name or Password you entered is incorrect."}, context_instance=RequestContext(request))
 	
@@ -207,14 +255,12 @@ def logout(request):
 	
 def userNameExistError(request):
 	return render_to_response('register/index.html', {'Error':"user Name already exists please try a different username"}, context_instance=RequestContext(request))
-
-	
 def registerprocess(request):
 	""" 
 	It process the register process of user.
 	It takes all fields from user and save them to the database.
 	"""
-
+	
 	try:
 		ld_uname = request.POST['USER_NAME']
 		try:
