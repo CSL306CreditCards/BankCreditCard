@@ -82,8 +82,8 @@ and enjoy a tension - free life.</p>
 <div class="wrapper">
 <div class="col-1">
 <p>
-<b>Auto Pay</b>
-<form action="successstatement.html" method="post"
+<b>Add Auto Pay:</b>
+<form action="successautopay.html" method="post"
 	style="clear: right; width: 100%; overflow: hidden">
 {% csrf_token %}
 <fieldset style="border: none; float: left">
@@ -93,6 +93,13 @@ and enjoy a tension - free life.</p>
 <p>
   <label for="account_no">To Account:   </label> <input size="38" name="account_no"
 	type="text"></p>
+	<p>
+	<label for="description">Description:   </label> <input size="38" name="description"
+	type="text"></p>
+  <label for="amount">Amount:   </label> <input size="38" name="amount"
+	type="number"></p>
+	<p><label for="date">Date of Payment:   </label> <input size="38" name="date"
+	type="date"></p>
 <p>  Installment Period: 
   <select name = 'installment' >
     <option value="monthly">Monthly</option>
@@ -101,11 +108,23 @@ and enjoy a tension - free life.</p>
   </select>
 </p>
 <p>	
-  
   <input type="submit" value="Submit" />
 </p>
 </fieldset>
 </form>
+
+<b>Auto Payments:</b>
+<table>
+ {% for autopay in list_of_autopay %}
+ <tr>
+ <td>{{autopay.to_account}}</td><td>{{autopay.description}}</td>
+ <td>{{autopay.amount}}</td><td>{{autopay.date}}</td>
+ <td></td>
+ </tr>
+ <br />
+ {% endfor %}
+ </table>
+ 
 </p>
 </div>
 <div class="col-2">

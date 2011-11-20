@@ -82,7 +82,19 @@ class Statement(models.Model):
     transaction_date = models.DateTimeField('date of transaction')
     amount = models.FloatField()
     to_account = models.CharField(max_length=20)
-    transaction_id = models.CharField(max_length = 20)
+    transaction_id = models.CharField(max_length = 200)
     description = models.CharField(max_length= 100)    
     card = models.ForeignKey(Card)
    
+class Autopay(models.Model):
+    """
+    
+    """
+    to_account = models.CharField(max_length=20)
+    description = models.CharField(max_length= 100)
+    amount = models.FloatField()
+    date = models.DateField()
+    installment = models.CharField(max_length = 20)
+    user = models.ForeignKey(User)
+        
+    
