@@ -28,7 +28,7 @@ class PersonalDetail(models.Model):
     """
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
-    gender = models.CharField(max_length=1)
+    gender = models.CharField(max_length=10)
     education = models.CharField(max_length=20)
     father_name = models.CharField(max_length=200)
     mother_name = models.CharField(max_length=200)

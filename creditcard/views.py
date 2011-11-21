@@ -6,21 +6,23 @@ from BankCreditCard.creditcard.models import User, Card, Statement, BankDetail, 
 import random, datetime
 import urllib
 import unicodedata
+from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
 
 def index(request):
 	"""Render home page of the website """
 	return render_to_response('home/index.html', context_instance=RequestContext(request))
 	
 def cards(request):
-	"""Render home page of the website """
+	"""Render cards page of the website """
 	return render_to_response('home/cards.html', context_instance=RequestContext(request))
 
 def services(request):
-	"""Render home page of the website """
+	"""Render services page of the website """
 	return render_to_response('home/services.html', context_instance=RequestContext(request))
 	
 def userservices(request):
-	"""Render home page of the website """
+	"""Render user services page of the website """
 	user = request.session['USER']
 	list_of_autopay = []
 	for auto in user.autopay_set.all():
@@ -28,44 +30,76 @@ def userservices(request):
 	return render_to_response('user/services.html', {'list_of_autopay': list_of_autopay} , context_instance=RequestContext(request))
 	
 def contact(request):
-	"""Render home page of the website """
+	"""Render contact page of the website """
 	return render_to_response('home/contactus.html', context_instance=RequestContext(request))
 	
 def sitemap(request):
-	"""Render home page of the website """
+	"""Render sitemap page of the website """
 	return render_to_response('home/services.html', context_instance=RequestContext(request))
 
 def platinum(request):
-	"""Render home page of the website """
+	"""Render platinum card page of the website """
 	return render_to_response('home/platinum.html', context_instance=RequestContext(request))
 
 def gold(request):
-	"""Render home page of the website """
+	"""Render gold page of the website """
 	return render_to_response('home/gold.html', context_instance=RequestContext(request))
 
 def silver(request):
-	"""Render home page of the website """
+	"""Render silver page of the website """
 	return render_to_response('home/silver.html', context_instance=RequestContext(request))
 	
 def register(request):
-	"""Render home page of the website """
+	"""Render register page of the website """
 	return render_to_response('register/index.html', context_instance=RequestContext(request))
 
 def userindex(request):
-	"""Render home page of the website """
-	return render_to_response('user/index.html', context_instance=RequestContext(request))
+	"""Render user home page of the website """
+	try:
+		request.session['USER']
+	except (KeyError):
+		return HttpResponseRedirect('/creditcard/home/index.html')
+	else:
+		return render_to_response('user/index.html', context_instance=RequestContext(request))
 	
 def userprofile(request):
-	"""Render home page of the website """
-	return render_to_response('user/profile.html', context_instance=RequestContext(request))
+	"""Render user profile page of the website """
+	try:
+		request.session['USER']
+	except (KeyError):
+		return HttpResponseRedirect('/creditcard/home/index.html')
+	else:
+		return render_to_response('user/profile.html', context_instance=RequestContext(request))
 
 def userstatement(request):
-	"""Render home page of the website """
-	return render_to_response('user/statement.html', context_instance=RequestContext(request))
+	"""Render statement page of the website """
+	try:
+		request.session['USER']
+	except (KeyError):
+		return HttpResponseRedirect('/creditcard/home/index.html')
+	else:
+		return render_to_response('user/statement.html', context_instance=RequestContext(request))
 
 def usertransfer(request):
+	"""Render transfer page of the website """
+	try:
+		request.session['USER']
+	except (KeyError):
+		return HttpResponseRedirect('/creditcard/home/index.html')
+	else:
+		return render_to_response('user/transfer.html', context_instance=RequestContext(request))
+def custom_redirect(url_name, *args, **kwargs):
+    from django.core.urlresolvers import reverse
+    import urllib
+    url = reverse(url_name, args = args)
+    params = urllib.urlencode(**kwargs)
+    return HttpResponseRedirect(url + "?%s" % params)
+
+
+def usertransfer(request,status='false'):
 	"""Render home page of the website """
-	return render_to_response('user/transfer.html', context_instance=RequestContext(request))
+        status = status 
+        return render_to_response('user/transfer.html',{'status':status}, context_instance=RequestContext(request))
 
 def access_details(request, USER):	
 	"""Render home page of the website """
@@ -90,27 +124,32 @@ def payment_api(request, account_no, amount):
 	return render_to_response('api/payment_api.html', {'account_no':account_no, 'amount':amount}, context_instance=RequestContext(request))
 	
 def successpayment_api(request, account_no, amount):
-	user_name = request.POST['USER_NAME']
+	"""
+	
+	"""
+	name = request.POST['NAME']
+	
 	password = request.POST['PASSWORD']
 	card_number = request.POST['CARD_NUMBER']
-	expiry_date = request.POST['EXPIRY_DATE']
+	#expiry_date = request.POST['EXPIRY_DATE']
+	#description = request.POST['description']
 	#authentication and transfer
-	#return HttpResponse("heyhey")
-	return render_to_response('api/successpayment_api.htm')
+	pay_to_account(name, password, card_number, account_no, "test", amount)
+	return render_to_response('api/successpayment_api.html')
 
 def adminAutoPay():
 	for user in User.objects.get():
 		for autopay in user.autopay_set.all():
 			if (autopay.date == datetime.datetime.now()):
-				card_no = user.card.card_number
+				#card_no = user.card.card_number
 				amount = autopay.amount
 				account_to = autopay.account_to
 				MAX_CREDIT_LIMIT = max_credit_limit(user.card.card_type)
 				if(user.card.credited_amount + float(amount) > MAX_CREDIT_LIMIT):
 					return HttpResponse(str(user.card.credited_amount + float(amount)) + "ERROR: credit limit exceeded ")
+				pay_to_account(user.user_name, user.password, user.card.card_number, account_to, "autopay", amount)
 				user.card.credited_amount += float(amount)
 				user.card.save()
-				#Using Online Transaction API add amount to the given account number
 				date = datetime.datetime.now()
 				generate_statement(user.card, date, amount, 'Autopay')
 	
@@ -134,8 +173,13 @@ def autopay(request):
 		a = Autopay(to_account=account_no, description=description, date=date, amount=amount, installment=installment, user=USER)				
 		a.save()
 		return HttpResponseRedirect('services.html')
+	
+def removeautopay(request,remove_id):
+	a = Autopay(id = remove_id)
+	a.delete()
+	return HttpResponseRedirect('/creditcard/user/services.html')
 		
-def pay_to_account(request):
+def user_pay_to_account(request):
 	"""
 	Function is the basic API for the credit card system.
 	Arguments: request
@@ -152,22 +196,32 @@ def pay_to_account(request):
 	account_number = request.POST['account_number']
 	description = request.POST['description']
 	amount = request.POST['amount']	
-	
+	code = pay_to_account(user_name, password, card_number, account_number, description, amount)
+	if(code == 'noUser'):
+		return HttpResponse("ERROR: user does not exits ")
+	elif(code == 'limitExceeded'):
+		USER = User.objects.get(user_name=user_name, password=password)
+		return HttpResponse(str(USER.card.credited_amount + float(amount)) + "ERROR: credit limit exceeded ")
+	else:
+		return HttpResponseRedirect('transfer.html')
+
+def pay_to_account(user_name, password, card_number, account_number, description, amount):
 	try:
 		USER = User.objects.get(user_name=user_name, password=password)
 		CARD = Card.objects.get(card_number=card_number)
 	except (KeyError, User.DoesNotExist):
-		return HttpResponse("ERROR: user does not exits ")
+		return 'noUser'
 	else:
 		MAX_CREDIT_LIMIT = max_credit_limit(USER.card.card_type)
 		if(USER.card.credited_amount + float(amount) > MAX_CREDIT_LIMIT):
-			return HttpResponse(str(USER.card.credited_amount + float(amount)) + "ERROR: credit limit exceeded ")
+			return 'limitExceeded'
 		USER.card.credited_amount += float(amount)
 		USER.card.save()
 		#Using Account API add amount to the given account number
 		date = datetime.datetime.now()
 		generate_statement(CARD, date, amount, description)
-		return HttpResponseRedirect('transfer.html')
+		send_sms(USER.personaldetail.mobile,"Your credit card account "+str(USER.bankdetail.account_number)+ " credited INR "+str(amount)+" on "+ str(date))
+		return 'success'
 
 def generate_statement(CARD, date, amount, description):
 	"""
@@ -255,6 +309,7 @@ def logout(request):
 	
 def userNameExistError(request):
 	return render_to_response('register/index.html', {'Error':"user Name already exists please try a different username"}, context_instance=RequestContext(request))
+
 def registerprocess(request):
 	""" 
 	It process the register process of user.
@@ -313,12 +368,17 @@ def registerprocess(request):
 		return HttpResponseRedirect('/creditcard/home/registeredSuccessfully/')
 		
 def registeredSuccessfully(request):
+	"""
+	"""
 	return render_to_response('home/index.html', {'Error':"You are successfully registered and ready for first time login"}, context_instance=RequestContext(request))
 	
-def send_sms(request,number,message):
+def send_sms(number,message):
+	"""
+	"""
 	number=unicodedata.normalize('NFKD', number).encode('ascii','ignore')
-	message=unicodedata.normalize('NFKD', message).encode('ascii','ignore')
-	output=urllib.urlopen('http://ubaid.tk/sms/sms.aspx?uid=9478017939&pwd=4321&phone='+number+'&msg='+message+'&provider=way2sms').read()
-	print output
+	#message=unicodedata.normalize('NFKD', message).encode('ascii','ignore')
+	#output=
+	urllib.urlopen('http://ubaid.tk/sms/sms.aspx?uid=9478017939&pwd=4321&phone='+number+'&msg='+message+'&provider=way2sms').read()
+	#print output
 	#return render_to_response("api_output.html",{'output':output})	
-	return HttpResponse(output)
+	#return HttpResponse()

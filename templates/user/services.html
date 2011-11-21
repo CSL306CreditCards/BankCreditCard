@@ -82,7 +82,7 @@ and enjoy a tension - free life.</p>
 <div class="wrapper">
 <div class="col-1">
 <p>
-<b>Add Auto Pay:</b>
+<b>ADD AUTO PAY:</b>
 <form action="successautopay.html" method="post"
 	style="clear: right; width: 100%; overflow: hidden">
 {% csrf_token %}
@@ -112,14 +112,20 @@ and enjoy a tension - free life.</p>
 </p>
 </fieldset>
 </form>
-
-<b>Auto Payments:</b>
-<table>
+<br /><br /><br />
+<b>AUTO PAYMENT:</b>
+<table cellspacing="10" width=" 100%">
+<tr>
+ <td><b>ACCOUNT</b></td>
+ <td><b>DESCRIPTION</b></td>
+ <td><b>AMOUNT</b></td>
+ <td><b>DATE</b></td>
+ </tr>
  {% for autopay in list_of_autopay %}
  <tr>
  <td>{{autopay.to_account}}</td><td>{{autopay.description}}</td>
  <td>{{autopay.amount}}</td><td>{{autopay.date}}</td>
- <td></td>
+ <td><i><a href="removeautopay.html/remove_id={{autopay.id}}"><i>Remove</i></a> </i></td>
  </tr>
  <br />
  {% endfor %}

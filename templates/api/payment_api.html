@@ -1,25 +1,176 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<title>ABC Bank | API</title>
+<!-- saved from url=(0094)https://secure.ebs.in/pg/ma/sale/pay/a/gateway/?PGSID=d5d0ffea872213177fe98a51458cb569&amp;/1/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+<head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-15">
+	<title>Credit Card Payments</title>
+	<link type="text/css" href="/creditcard/home/css/basic.css" rel="stylesheet" media="screen">
+	<!-- IE6 "fix" for the close png image -->
+	<!--[if lt IE 7]>
+	<link type='text/css' href='{webRoot}/themes/default/css/basic_ie.css' rel='stylesheet' media='screen' />
+	<![endif]-->
 </head>
-<body>
-
-<form action="/creditcard/successpayment_api.html/{{account_no}}/{{amount}}/" method="post">
-{%csrf_token %}
-
-<h4>Please provide your card information</h4>
-<p><label for="USER_NAME">Name:</label> <input size="38"
-	name="USER_NAME" type="text"></p>
-<p><label for="PASSWORD">Security Code:</label> <input size="38"
-	name="PASSWORD" type="password"></p>
-<p><label for="CARD_NUMBER">Card Number: </label> <input size="38"
-	name="CARD_NUMBER" type="text"> 
-	<label for="EXPIRY_DATE"><br /><br />Expiry Date: </label> <input size="38" name="EXPIRY_DATE" type="date"> 
-<br />
-</label>
-</p>
-<input type="submit" value="Submit" />
-</form>
+<body id="page-home">
+	<div style="max-width:780px;margin:0 auto;">
+		<table width="100%" border="0" cellpadding="2" cellspacing="2" align="center" style="max-width:780px;">
+			<tbody>
+				<tr><td colspan="2"><img src="/creditcard/home/images/image.jpg"></td></tr>
+			</tbody>
+		</table>
+		<table width="100%" border="0" cellpadding="2" cellspacing="2" align="center" style="max-width:780px;">
+			<tbody>
+				<tr>
+				<td class="box" colspan="2">
+				<div id="loading" style="position: absolute; display: none; ">
+					<span style="background:red;color:white;font-weight:bold;">Please wait. Loading..</span>
+				</div>
+				<div id="ajaxMessage" class="message"><!-- Do not remove, MSIE fix --></div>
+				<form action="/creditcard/api/successpayment_api.html/{{account_no}}/{{amount}}/" method="post">
+				{%csrf_token %}
+					<div class="header"><span style="display:block;padding:5px;"><b>Order Information</b></span></div>	
+					<div class="action" style="margin-top:0;">
+						<table width="100%">
+							<tbody>
+								<tr>
+									<th align="left" width="60">Order No</th>
+									<th align="left">: 636647</th>
+								</tr>
+								<tr>
+									<th align="left" width="60" valign="top">Amount</th>
+									<th align="left" nowrap="nowrap">: <big><span>Rs</span> {{amount}}</big><br></th>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="header">
+						<table cellpadding="0" cellspacing="0">
+							<div class="header"><span style="display:block;padding:5px;"><b>Credit Card Details</b></span></div>
+						</table>
+					</div>
+					<fieldset class="tabs">
+						<div class="tab" name="tab_1" id="tab_1" style="">
+							<table width="100%">
+								<tbody>
+									<tr>
+										<td class="field" valign="middle" width="100">We Accept</td>
+										<td valign="middle">:</td>
+										<td id="1_cards" valign="middle" nowrap="nowrap"><span class="visa"><img src="/creditcard/home/images/visa.gif"></span></td>
+									</tr>	
+									<tr>
+										<td valign="top" class="field">Card Number</td>
+										<td valign="top">:</td>
+										<td valign="top" colspan="2">
+										<input id="1_number_1" type="text" maxlength="16" size="40" name="CARD_NUMBER" class="number_1">
+										</td>
+									</tr>
+									<tr>
+										<td valign="top" class="field">Expiry</td>
+										<td valign="top">:</td>
+										<td valign="top" class="pad5" colspan="2">
+										<select id="1_exp_month" name="EXPIRY_MONTH">
+											<option value="">Month</option>
+											<option value="01">Jan</option>
+											<option value="02">Feb</option>
+											<option value="03">Mar</option>
+											<option value="04">Apr</option>
+											<option value="05">May</option>
+											<option value="06">Jun</option>
+											<option value="07">Jul</option>
+											<option value="08">Aug</option>
+											<option value="09">Sep</option>
+											<option value="10">Oct</option>
+											<option value="11">Nov</option>
+											<option value="12">Dec</option>
+										</select>
+										<select id="1_exp_year" name="EXPIRY_YEAR">
+											<option value="">Year</option>
+											<option value="11">2011</option>
+											<option value="12">2012</option>
+											<option value="13">2013</option>
+											<option value="14">2014</option>
+											<option value="15">2015</option>
+											<option value="16">2016</option>
+											<option value="17">2017</option>
+											<option value="18">2018</option>
+											<option value="19">2019</option>
+											<option value="20">2020</option>
+											<option value="21">2021</option>
+											<option value="22">2022</option>
+											<option value="23">2023</option>
+											<option value="24">2024</option>
+											<option value="25">2025</option>
+											<option value="26">2026</option>
+											<option value="27">2027</option>
+											<option value="28">2028</option>
+											<option value="29">2029</option>
+											<option value="30">2030</option>
+											<option value="31">2031</option>
+											<option value="32">2032</option>
+											<option value="33">2033</option>
+											<option value="34">2034</option>
+											<option value="35">2035</option>
+											<option value="36">2036</option>
+											<option value="37">2037</option>
+											<option value="38">2038</option>
+											<option value="39">2039</option>
+											<option value="40">2040</option>
+											<option value="41">2041</option>
+											<option value="42">2042</option>
+											<option value="43">2043</option>
+											<option value="44">2044</option>
+											<option value="45">2045</option>
+											<option value="46">2046</option>
+											<option value="47">2047</option>
+											<option value="48">2048</option>
+											<option value="49">2049</option>
+											<option value="50">2050</option>
+											<option value="51">2051</option>
+											<option value="52">2052</option>
+											<option value="53">2053</option>
+											<option value="54">2054</option>
+											<option value="55">2055</option>
+											<option value="56">2056</option>
+											<option value="57">2057</option>
+											<option value="58">2058</option>
+											<option value="59">2059</option>
+											<option value="60">2060</option>
+										</select>
+										</td>
+										<td align="right" valign="top" rowspan="3"></td>
+									</tr>
+									<tr>
+										<td valign="top" class="field">Security Key</td>
+										<td valign="top">:</td>
+										<td valign="top" colspan="2"><input id="1_cvv" type="password" maxlength="4" size="4" name="PASSWORD" value=""></td>
+									</tr>	
+									<tr>
+										<td valign="top" class="field">Name on card</td>
+										<td valign="top">:</td>
+										<td valign="top" colspan="2"><input id="1_name_on_card" type="text" size="40" maxlength="64" name="NAME" value=""></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</fieldset>
+					<div class="action" style="text-align:center">
+						<input class="red" type="submit" name="submitted" id="submitted" value="Proceed >>" style="width:150px;">
+					</div>
+				</form>
+				<form method="post" action="" name="frmPayment" id="frmPayment">
+					<input type="hidden" name="a" value="payment">
+					<input type="hidden" name="payment_page" value="1">
+					<input type="hidden" name="payment_mode" value="">
+					<input type="hidden" name="number" value="">
+					<input type="hidden" name="exp_month" value="">
+					<input type="hidden" name="exp_year" value="">
+					<input type="hidden" name="cvv" value="">
+					<input type="hidden" name="name_on_card" value="">
+					<input type="hidden" name="g" value="">
+					<input type="hidden" name="__RMSID_RB" id="__RMSID_RB" value="117.239.5.250|0|Netscape|true|true|true|1366x768|1366x728|32|undefined|true|Win32|Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2|undefined|undefined|undefined|1321725886090|-330|t5f63nk46hgkvvdedpl90vs325|21413813013587275|21413813013587275">
+				</form>
+				
+				</td></tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>
