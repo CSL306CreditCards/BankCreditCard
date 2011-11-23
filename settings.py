@@ -65,7 +65,7 @@ STATIC_URL = '/static'
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static/admin/'
+ADMIN_MEDIA_PREFIX = '/static'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -123,6 +123,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 	'django.contrib.admin',
     'django.contrib.admindocs',
+    'djangorestframework',
     # Uncomment the next line to enable the admin:
     #'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:

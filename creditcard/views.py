@@ -7,7 +7,7 @@ import random, datetime
 import urllib
 import unicodedata
 from django.core.urlresolvers import reverse
-from django.shortcuts import redirect
+#from django.shortcuts import redirect
 
 def index(request):
 	"""Render home page of the website """
@@ -88,18 +88,17 @@ def usertransfer(request):
 		return HttpResponseRedirect('/creditcard/home/index.html')
 	else:
 		return render_to_response('user/transfer.html', context_instance=RequestContext(request))
+	
 def custom_redirect(url_name, *args, **kwargs):
-    from django.core.urlresolvers import reverse
-    import urllib
-    url = reverse(url_name, args = args)
-    params = urllib.urlencode(**kwargs)
-    return HttpResponseRedirect(url + "?%s" % params)
+	url = reverse(url_name, args = args)
+	params = urllib.urlencode(**kwargs)
+	return HttpResponseRedirect(url + "?%s" % params)
 
 
-def usertransfer(request,status='false'):
-	"""Render home page of the website """
-        status = status 
-        return render_to_response('user/transfer.html',{'status':status}, context_instance=RequestContext(request))
+#def usertransfer(request,status='false'):
+#	"""Render home page of the website """
+#	status = status 
+#	return render_to_response('user/transfer.html',{'status':status}, context_instance=RequestContext(request))
 
 def access_details(request, USER):	
 	"""Render home page of the website """
