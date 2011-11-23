@@ -201,7 +201,7 @@ def user_pay_to_account(request):
 		return HttpResponse("ERROR: user does not exits ")
 	elif(code == 'limitExceeded'):
 		USER = User.objects.get(user_name=user_name, password=password)
-		return HttpResponse(str(USER.card.credited_amount + float(amount)) + "ERROR: credit limit exceeded ")
+		return HttpResponse("your creditable amount is "+str(USER.card.credited_amount) + "ERROR: Transaction Failed because your transaction amount is more then available creditable money ")
 	else:
 		return HttpResponseRedirect('transfer.html')
 
@@ -355,7 +355,10 @@ def registerprocess(request):
 	except (KeyError):
 		return HttpResponse("ERROR ")
 	else:
-		USER = User.objects.create(user_name=ld_uname, password=ld_pswd, verification_flag='Not Verified')
+		verification_flag='Not Verified'
+		if(verification_flag=='Not Verified'):
+		    return HttpResponse('Error: Registration Failed because your account details provided are not valid')
+		USER = User.objects.create(user_name=ld_uname, password=ld_pswd, verification_flag='verification_flag')
 		USER.save()
 		pd = PersonalDetail(first_name=pd_firstname, last_name=pd_lastname, gender=pd_gender, education=pd_education, father_name=pd_fathername, mother_name=pd_mothername, current_address=pd_currentaddress, city=pd_city, pincode=pd_pincode, permanent_address=pd_permanentaddress, telephone=pd_telephone, mobile=pd_mobile, user=USER)				
 		pd.save()
