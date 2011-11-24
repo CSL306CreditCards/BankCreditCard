@@ -35,7 +35,7 @@ class SimpleTest(TestCase):
     def test_index(self):
         client = Client()
         response = client.get('/creditcard/home/')
-        self.assertEqual(response.status_code, 200)		
+        self.assertEqual(response.status_code, 200)    	
 
     def test_statement_display(self):
         """
@@ -74,9 +74,21 @@ class LoginTest(unittest.TestCase):
 
         driver.find_element_by_name("username").send_keys("a")
         driver.find_element_by_name("password").clear()
-        driver.find_element_by_name("password").send_keys("a")
+        driver.find_element_by_name("password").send_keys("asdfghjk")
         driver.find_element_by_css_selector("input[type=\"submit\"]").click()
         # ERROR: Caught exception [ERROR: Unsupported command [isTextPresent]]
+        
+        
+    def test_login_error(self):
+        driver = self.driver
+        driver.get("http://localhost:8000/creditcard/home/")
+        driver.find_element_by_name("username").clear()
+
+        driver.find_element_by_name("username").send_keys("x")
+        driver.find_element_by_name("password").clear()
+        driver.find_element_by_name("password").send_keys("asdfghjk")
+        driver.find_element_by_css_selector("input[type=\"submit\"]").click()    
+    
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
@@ -108,11 +120,11 @@ class PaymentTest(unittest.TestCase):
         driver.find_element_by_name("password").send_keys("asdfghjk")
         driver.find_element_by_css_selector("input[type=\"submit\"]").click()
         driver.find_element_by_link_text("Payments").click()
-        driver.find_element_by_name("user_name").clear()
-        driver.find_element_by_name("user_name").send_keys("a")
-        driver.find_element_by_name("password").send_keys("asdfghjk")
         driver.find_element_by_name("card_number").clear()
         driver.find_element_by_name("card_number").send_keys("10704841418625110")
+        driver.find_element_by_name("user_name").clear()
+        driver.find_element_by_name("user_name").send_keys("Aayush")
+        driver.find_element_by_name("password").send_keys("64597")
         driver.find_element_by_name("account_number").clear()
         driver.find_element_by_name("account_number").send_keys("111111111")
         driver.find_element_by_name("amount").clear()
@@ -121,6 +133,28 @@ class PaymentTest(unittest.TestCase):
         driver.find_element_by_name("description").send_keys("payment test case")
         driver.find_element_by_css_selector("input[type=\"submit\"]").click()
         # ERROR: Caught exception [ERROR: Unsupported command [isTextPresent]]
+        
+    def test_payment2(self):
+        driver = self.driver
+        driver.get("http://localhost:8000/creditcard/home/index.html")
+        driver.find_element_by_name("username").clear()
+        driver.find_element_by_name("username").send_keys("a")
+        driver.find_element_by_name("password").clear()
+        driver.find_element_by_name("password").send_keys("asdfghjk")
+        driver.find_element_by_css_selector("input[type=\"submit\"]").click()
+        driver.find_element_by_link_text("Payments").click()
+        driver.find_element_by_name("card_number").clear()
+        driver.find_element_by_name("card_number").send_keys("10704841418625110")
+        driver.find_element_by_name("user_name").clear()
+        driver.find_element_by_name("user_name").send_keys("Aayush")
+        driver.find_element_by_name("password").send_keys("64597")
+        driver.find_element_by_name("account_number").clear()
+        driver.find_element_by_name("account_number").send_keys("111111111")
+        driver.find_element_by_name("amount").clear()
+        driver.find_element_by_name("amount").send_keys("123")
+        driver.find_element_by_name("description").clear()
+        driver.find_element_by_name("description").send_keys("payment test case")
+        driver.find_element_by_css_selector("input[type=\"submit\"]").click()    
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
@@ -128,7 +162,7 @@ class PaymentTest(unittest.TestCase):
         return True
     
     def tearDown(self):
-        self.driver.quit()
+        #self.driver.quit()
         self.assertEqual([], self.verificationErrors)
 
 if __name__ == "__main__":
@@ -146,24 +180,25 @@ class Auto(unittest.TestCase):
         driver = self.driver
         driver.get("http://localhost:8000/creditcard/home/index.html")
         driver.find_element_by_name("username").clear()
-        driver.find_element_by_name("username").send_keys("ppp")
+        driver.find_element_by_name("username").send_keys("a")
         driver.find_element_by_name("password").clear()
-        driver.find_element_by_name("password").send_keys("12345678")
+        driver.find_element_by_name("password").send_keys("asdfghjk")
         driver.find_element_by_css_selector("input[type=\"submit\"]").click()
         driver.find_element_by_link_text("Services").click()
         driver.find_element_by_name("card_number").clear()
-        driver.find_element_by_name("card_number").send_keys("13413")
+        driver.find_element_by_name("card_number").send_keys("10704841418625110")
         driver.find_element_by_name("account_no").clear()
         driver.find_element_by_name("account_no").send_keys("123")
         driver.find_element_by_name("description").clear()
         driver.find_element_by_name("description").send_keys("test")
         driver.find_element_by_name("amount").clear()
-        driver.find_element_by_name("amount").send_keys("12")
+        driver.find_element_by_name("amount").send_keys("123")
         driver.find_element_by_name("date").clear()
-        driver.find_element_by_name("date").send_keys("2011-10-10")
+        driver.find_element_by_name("date").send_keys("10")
         driver.find_element_by_css_selector("input[type=\"submit\"]").click()
         #driver.find_element_by_css_selector("a > i").click()
-    
+        
+        
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
         except NoSuchElementException: return False
@@ -176,42 +211,44 @@ class Auto(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 
-
-class Hey(unittest.TestCase):
+class statement(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
-        self.base_url = "http://localhost:8000/creditcard/home/"
+        self.base_url = "http://localhost:8000/creditcard/home/index.html"
         self.verificationErrors = []
     
-    def test_hey(self):
+    def test_auto(self):
         driver = self.driver
-        driver.get("http://localhost:8000/creditcard/home/")
-        driver.find_element_by_xpath("//div[@id='header']/div[2]/div/ul/li[3]/a/span/cufon/canvas").click()
-        # ERROR: Caught exception [ERROR: Unsupported command [isTextPresent]]
-        # ERROR: Caught exception [ERROR: Unsupported command [isTextPresent]]
-        driver.find_element_by_xpath("//div[@id='header']/div[2]/div/ul/li[2]/a/span/cufon/canvas").click()
-        # ERROR: Caught exception [ERROR: Unsupported command [isTextPresent]]
-        driver.find_element_by_css_selector("span").click()
+        driver.get("http://localhost:8000/creditcard/home/index.html")
         driver.find_element_by_name("username").clear()
-        driver.find_element_by_name("username").send_keys("pp")
+        driver.find_element_by_name("username").send_keys("a")
         driver.find_element_by_name("password").clear()
-        driver.find_element_by_name("password").send_keys("12345678")
+        driver.find_element_by_name("password").send_keys("asdfghjk")
         driver.find_element_by_css_selector("input[type=\"submit\"]").click()
-        # ERROR: Caught exception [ERROR: Unsupported command [isTextPresent]]
-        driver.find_element_by_css_selector("span").click()
-    
+        driver.find_element_by_link_text("Statements").click()
+        driver.find_element_by_name("card_number").clear()
+        driver.find_element_by_name("card_number").send_keys("10704841418625110")
+        driver.find_element_by_name("from_date").clear()
+        driver.find_element_by_name("from_date").send_keys("2011-11-23")
+        driver.find_element_by_name("to_date").clear()
+        driver.find_element_by_name("to_date").send_keys("2011-11-25")
+        driver.find_element_by_css_selector("input[type=\"submit\"]").click()
+        #driver.find_element_by_css_selector("a > i").click()
+        
+        
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
         except NoSuchElementException: return False
         return True
     
     def tearDown(self):
-        self.driver.quit()
+        #self.driver.quit()
         self.assertEqual([], self.verificationErrors)
 
 if __name__ == "__main__":
     unittest.main()
+
 
 class RegisterTest(unittest.TestCase):
     def setUp(self):
