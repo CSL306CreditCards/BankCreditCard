@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^creditcard/api/autopay$', ListOrCreateModelView.as_view(resource=AutopayResource), name='model-resource-Autopay'),
     url(r'^creditcard/api/autopay/(?P<pk>[0-9]+)/$', InstanceModelView.as_view(resource=AutopayResource)),
+<<<<<<< HEAD
     url(r'^creditcard/api/payment_api.html/account_no=(?P<account_no>\d+)/amount=(?P<amount>\d+)/$', 'creditcard.views.paymentApi'),
     url(r'^creditcard/api/successpayment_api.html/(?P<account_no>\d+)/(?P<amount>\d+)/$', 'creditcard.views.successpaymentApi'),
     url(r'^creditcard/home/$', 'creditcard.views.index'),
@@ -56,6 +57,7 @@ urlpatterns = patterns('',
 )
 urlpatterns += patterns('django.views.static',
     (r'^creditcard/api/(?P<path>.*)$', 'serve', {'document_root': 'static'}),
+
 )
 urlpatterns += patterns('django.views.static',
 	(r'^creditcard/home/(?P<path>.*)$', 'serve', {'document_root': 'static'}),

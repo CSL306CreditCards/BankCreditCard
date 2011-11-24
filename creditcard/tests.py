@@ -7,7 +7,7 @@ Replace this with more appropriate tests for your application.
 from django.test import Client
 from django.test import TestCase
 from django.utils import unittest
-#from django.test.client import Client
+from django.test.client import Client
 from selenium import selenium
 import unittest, time, re
 from selenium import webdriver
@@ -21,7 +21,7 @@ class SimpleTest(TestCase):
         Tests that 1 + 1 always equals 2.
         """
         self.assertEqual(1 + 1, 2)
-	
+        
     def test_basic_mult(self):
         """
         Tests that 1 + 1 always equals 2.
@@ -36,12 +36,11 @@ class SimpleTest(TestCase):
         client = Client()
         response = client.get('/creditcard/home/')
         self.assertEqual(response.status_code, 200)		
-        
+
     def test_statement_display(self):
         """
         Check the simple funds transfer
-        """
-        
+        """        
         c = Client()
         response = c.post('/creditcard/user/statement.html', {'card_number':'10001', 'from_date':'10002', 'to_date':5000})
         self.assertEqual(response.status_code, 301)
@@ -49,7 +48,7 @@ class SimpleTest(TestCase):
         #self.assertEqual(account.ba_acc_bal,Decimal(25000))
         #account2 = Bank_Account.objects.get(ba_acc_no="10002")
         #self.assertEqual(account2.ba_acc_bal,Decimal(68000))
-        
+
     def test_forget_password(self):	
         c = Client()
         response = c.post('/creditcard/home/', {'':'10001', 'from_date':'10002', 'to_date':5000})
@@ -72,6 +71,7 @@ class LoginTest(unittest.TestCase):
         driver = self.driver
         driver.get("http://localhost:8000/creditcard/home/")
         driver.find_element_by_name("username").clear()
+
         driver.find_element_by_name("username").send_keys("a")
         driver.find_element_by_name("password").clear()
         driver.find_element_by_name("password").send_keys("a")
@@ -103,20 +103,20 @@ class PaymentTest(unittest.TestCase):
         driver = self.driver
         driver.get("http://localhost:8000/creditcard/home/index.html")
         driver.find_element_by_name("username").clear()
-        driver.find_element_by_name("username").send_keys("a")
+        driver.find_element_by_name("username").send_keys("ppp")
         driver.find_element_by_name("password").clear()
-        driver.find_element_by_name("password").send_keys("a")
+        driver.find_element_by_name("password").send_keys("12345678")
         driver.find_element_by_css_selector("input[type=\"submit\"]").click()
         driver.find_element_by_link_text("Payments").click()
         driver.find_element_by_name("user_name").clear()
-        driver.find_element_by_name("user_name").send_keys("a")
-        driver.find_element_by_name("password").send_keys("a")
+        driver.find_element_by_name("user_name").send_keys("ppp")
+        driver.find_element_by_name("password").send_keys("12345678")
         driver.find_element_by_name("card_number").clear()
-        driver.find_element_by_name("card_number").send_keys("10903")
+        driver.find_element_by_name("card_number").send_keys("13413")
         driver.find_element_by_name("account_number").clear()
         driver.find_element_by_name("account_number").send_keys("111111111")
         driver.find_element_by_name("amount").clear()
-        driver.find_element_by_name("amount").send_keys("11")
+        driver.find_element_by_name("amount").send_keys("11111111")
         driver.find_element_by_name("description").clear()
         driver.find_element_by_name("description").send_keys("payment test case")
         driver.find_element_by_css_selector("input[type=\"submit\"]").click()
@@ -135,7 +135,46 @@ if __name__ == "__main__":
     unittest.main()
 
 
+class Auto(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(30)
+        self.base_url = "http://localhost:8000/creditcard/home/index.html"
+        self.verificationErrors = []
+    
+    def test_auto(self):
+        driver = self.driver
+        driver.get("http://localhost:8000/creditcard/home/index.html")
+        driver.find_element_by_name("username").clear()
+        driver.find_element_by_name("username").send_keys("ppp")
+        driver.find_element_by_name("password").clear()
+        driver.find_element_by_name("password").send_keys("12345678")
+        driver.find_element_by_css_selector("input[type=\"submit\"]").click()
+        driver.find_element_by_link_text("Services").click()
+        driver.find_element_by_name("card_number").clear()
+        driver.find_element_by_name("card_number").send_keys("13413")
+        driver.find_element_by_name("account_no").clear()
+        driver.find_element_by_name("account_no").send_keys("123")
+        driver.find_element_by_name("description").clear()
+        driver.find_element_by_name("description").send_keys("test")
+        driver.find_element_by_name("amount").clear()
+        driver.find_element_by_name("amount").send_keys("12")
+        driver.find_element_by_name("date").clear()
+        driver.find_element_by_name("date").send_keys("2011-10-10")
+        driver.find_element_by_css_selector("input[type=\"submit\"]").click()
+        #driver.find_element_by_css_selector("a > i").click()
+    
+    def is_element_present(self, how, what):
+        try: self.driver.find_element(by=how, value=what)
+        except NoSuchElementException, e: return False
+        return True
+    
+    def tearDown(self):
+        #self.driver.quit()
+        self.assertEqual([], self.verificationErrors)
 
+if __name__ == "__main__":
+    unittest.main()
 
 
 class Hey(unittest.TestCase):
@@ -248,6 +287,35 @@ class RegisterTest(unittest.TestCase):
         driver.find_element_by_name("CARD_TYPE").clear()
         driver.find_element_by_name("CARD_TYPE").send_keys("Platinum")
         # ERROR: Caught exception [ERROR: Unsupported command [select]]
+        driver.find_element_by_css_selector("input[type=\"submit\"]").click()
+        # ERROR: Caught exception [ERROR: Unsupported command [isTextPresent]]
+    
+    def is_element_present(self, how, what):
+        try: self.driver.find_element(by=how, value=what)
+        except NoSuchElementException, e: return False
+        return True
+    
+    def tearDown(self):
+        self.driver.quit()
+        self.assertEqual([], self.verificationErrors)
+
+if __name__ == "__main__":
+    unittest.main()
+
+	
+class Forgotpasswordtest(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.driver.implicitly_wait(30)
+        self.base_url = "http://localhost:8000/creditcard/home/index.html"
+        self.verificationErrors = []
+    
+    def test_forgotpassword(self):
+        driver = self.driver
+        driver.get("/creditcard/home/")
+        driver.find_element_by_link_text("exact:Forgot your password?").click()
+        driver.find_element_by_name("username").clear()
+        driver.find_element_by_name("username").send_keys("ppp")
         driver.find_element_by_css_selector("input[type=\"submit\"]").click()
         # ERROR: Caught exception [ERROR: Unsupported command [isTextPresent]]
     

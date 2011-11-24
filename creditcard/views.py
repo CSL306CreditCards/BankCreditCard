@@ -94,14 +94,14 @@ def autopay(request):
 	m = int(date[5:7])
 	d = int(date[8:10])
 	date = datetime.datetime(y, m, d)
-	installment = request.POST['installment']
+	#installment = request.POST['installment']
 	USER = request.session['USER']
 	try:
 		Card.objects.get(card_number=card_number)
 	except (KeyError, Card.DoesNotExist):
 		return HttpResponse("ERROR: Incorrect Card Number ")
 	else:
-		a = Autopay(to_account=account_no, description=description, date=date, amount=amount, installment=installment, user=USER)				
+		a = Autopay(to_account=account_no, description=description, date=date, amount=amount, user=USER)				
 		a.save()
 		return HttpResponseRedirect('services.html')
 	
@@ -132,7 +132,7 @@ def userPayToAccount(request):
 		return HttpResponse("ERROR: user does not exits ")
 	elif(code == 'limitExceeded'):
 		USER = User.objects.get(user_name=user_name, password=password)
-		return HttpResponse(str(USER.card.credited_amount + float(amount)) + "ERROR: credit limit exceeded ")
+		return HttpResponse("your creditable amount is " + str(USER.card.credited_amount) + "ERROR: Transaction Failed because your transaction amount is more then available creditable money ")
 	else:
 		return HttpResponseRedirect('transfer.html')
 
@@ -291,7 +291,10 @@ def registerprocess(request):
 	except (KeyError):
 		return HttpResponse("ERROR ")
 	else:
-		USER = User.objects.create(user_name=ld_uname, password=ld_pswd, verification_flag='Not Verified')
+		verification_flag = 'Not Verified'
+		if(verification_flag == 'Not Verified'):
+			return HttpResponse('Error: Registration Failed because your account details provided are not valid')
+		USER = User.objects.create(user_name=ld_uname, password=ld_pswd, verification_flag='verification_flag')
 		USER.save()
 		pd = PersonalDetail(first_name=pd_firstname, last_name=pd_lastname, gender=pd_gender, education=pd_education, father_name=pd_fathername, mother_name=pd_mothername, current_address=pd_currentaddress, city=pd_city, pincode=pd_pincode, permanent_address=pd_permanentaddress, telephone=pd_telephone, mobile=pd_mobile, user=USER)				
 		pd.save()
@@ -359,6 +362,23 @@ def silver(request):
 def register(request):
 	"""Render register page of the website """
 	return render_to_response('register/index.html', context_instance=RequestContext(request))
+
+def forgetpass(request):
+	"""Render home page of the website """
+	return render_to_response('home/forgetpassword.html', context_instance=RequestContext(request))
+	
+def send_password(request):
+	"""Render home page of the website """
+	name = request.POST['username']
+	try:
+		USER = User.objects.get(user_name=name)
+	except (KeyError, User.DoesNotExist):
+		return HttpResponseRedirect('/creditcard/home/userDoesNotExist/')
+	else:
+		sendSms(USER.personaldetail.mobile, "Your password is" + str(USER.password))
+		return render_to_response('home/forgetpassword.html', context_instance=RequestContext(request))
+	return HttpResponseRedirect('/creditcard/home/forgetpassword.html/')	
+
 
 def userindex(request):
 	"""Render user home page of the website """
