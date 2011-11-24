@@ -113,7 +113,7 @@ and enjoy a tension - free life.</p>
 </fieldset>
 </form>
 <br /><br /><br />
-<b>AUTO PAYMENT:</b>
+<b>AUTO PAYMENTS:</b>
 <table cellspacing="10" width=" 100%">
 <tr>
  <td><b>ACCOUNT</b></td>
@@ -121,7 +121,7 @@ and enjoy a tension - free life.</p>
  <td><b>AMOUNT</b></td>
  <td><b>DATE</b></td>
  </tr>
- {% for autopay in list_of_autopay %}
+ {% for autopay in autopayList %}
  <tr>
  <td>{{autopay.to_account}}</td><td>{{autopay.description}}</td>
  <td>{{autopay.amount}}</td><td>{{autopay.date}}</td>
@@ -130,8 +130,21 @@ and enjoy a tension - free life.</p>
  <br />
  {% endfor %}
  </table>
- 
+ <br /><br /><br />
+<p> <b>RETURN CREDIT (Pay your bills)</b></p>
+ <br  />
+ <p><b>Credit Amount:</b>  {{request.session.USER.card.credited_amount}}
+ <br  /></p>
+ <form action="paybill.html" method="post"
+	style="clear: right; width: 100%; overflow: hidden">
+{% csrf_token %}
+<label for="pay_amount"><b>Pay Amount:</b>   </label> <input size="38" name="pay_amount"
+	type="number"></p>
+<p>	
+  <input type="Submit" value="Make Pay" />
 </p>
+ </form>
+ 
 </div>
 <div class="col-2">
 <div class="box2">

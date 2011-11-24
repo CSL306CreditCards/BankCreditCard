@@ -1,5 +1,15 @@
 from djangorestframework.resources import ModelResource
-from BankCreditCard.creditcard.models import *
+from BankCreditCard.creditcard.models import User, Card, Statement, BankDetail, EmploymentDetail, PersonalDetail, Autopay
+
+"""
+#  Demonstrates API's input validation using form input
+ bash: curl -X POST --data 'foo=true' http://api.django-rest-framework.org/model-resource-example/
+ {"detail": {"bar": ["This field is required."], "baz": ["This field is required."]}}
+
+ #  Demonstrates API's input validation using JSON input
+ bash: curl -X POST -H 'Content-Type: application/json' --data-binary '{"foo":true}' http://api.django-rest-framework.org/model-resource-example/
+{"detail": {"bar": ["This field is required."], "baz": ["This field is required."]}}
+"""
 
 class UserResource(ModelResource):
     model = User

@@ -20,8 +20,6 @@ class User(models.Model):
     password = models.CharField(max_length=200)
     verification_flag = models.CharField(max_length=20)
    
-   
-
 class PersonalDetail(models.Model):
     """
     
@@ -96,5 +94,8 @@ class Autopay(models.Model):
     date = models.DateField()
     installment = models.CharField(max_length = 20)
     user = models.ForeignKey(User)
+    
+    def test(self):
+        print 'hello world'
         
     
