@@ -34,7 +34,7 @@ def interest(card_type):
 	elif(card_type == 'Gold'):
 		return 5
 	elif(card_type == 'Silver'):
-		return 
+		return 2
 
 def paymentApi(request, account_no, amount):
 	return render_to_response('api/payment_api.html', {'account_no':account_no, 'amount':amount}, context_instance=RequestContext(request))
@@ -50,36 +50,37 @@ def successpaymentApi(request, account_no, amount):
 	#expiry_date = request.POST['EXPIRY_DATE']
 	#description = request.POST['description']
 	#authentication and transfer
-	payToAccount(name, password, card_number, account_no, "test", amount)
+	payToAccount(card_number,name, password,  account_no, "test", amount)
 	return render_to_response('api/successpayment_api.html')
 
 def adminInterest():
-	for user in User.objects.get():
-		amount = autopay.amount
-		interest = interest(user.card.card_type)
-		user.card.credited_amount += float(interest)
+	for user in User.objects.all():
+		p = (user.card.credited_amount * interest(user.card.card_type))/100
+		user.card.credited_amount += float(p)
 		user.card.save()		
 		date = datetime.datetime.now()
-		generateStatement(user.card, date, amount, 'Interest')
+		generateStatement(user.card, date, p, 'Interest')
 
 def adminAutoPay():
-	for user in User.objects.get():
+	date = datetime.datetime.now()
+	for user in User.objects.all():
 		for autopay in user.autopay_set.all():
-			if (autopay.date == datetime.datetime.now()):
+			if (int(autopay.date) == datetime.datetime.now().day):
 				#card_no = user.card.card_number
 				amount = autopay.amount
-				account_to = autopay.account_to
+				to_account = autopay.to_account
 				if(user.card.credited_amount + float(amount) > maxCreditLimit(user.card.card_type)):
-					return HttpResponse(str(user.card.credited_amount + float(amount)) + "ERROR: credit limit exceeded ")
-				payToAccount(user.user_name, user.password, user.card.card_number, account_to, "autopay", amount)
+					generateStatement(user.card, date, amount, 'Limit Exceeded Of Autopay')
+					return 0
+				payToAccount(user.card.card_number, user.card.name_on_card, user.card.security_pin, to_account, "autopay", amount)
 				user.card.credited_amount += float(amount)
 				user.card.save()
-				date = datetime.datetime.now()
 				generateStatement(user.card, date, amount, 'Autopay')
 
 def payBill(request):
 	amount = request.POST['pay_amount']
 	USER = request.session['USER']
+	#Using Accounts API
 	USER.card.credited_amount -= float(amount)
 	USER.card.save()
 	return HttpResponseRedirect('services.html')
@@ -90,10 +91,6 @@ def autopay(request):
 	amount = request.POST['amount']
 	description = request.POST['description']
 	date = request.POST['date']
-	y = int(date[0:4])
-	m = int(date[5:7])
-	d = int(date[8:10])
-	date = datetime.datetime(y, m, d)
 	#installment = request.POST['installment']
 	USER = request.session['USER']
 	try:
@@ -121,36 +118,39 @@ def userPayToAccount(request):
 	amount -- Amount of money to transfer
 	description -- Remark provided by user
 	"""
-	user_name = request.POST['user_name']
-	password = request.POST['password']
+	nameOnCard = request.POST['user_name']
+	securityKey = request.POST['password']
 	card_number = request.POST['card_number']
 	account_number = request.POST['account_number']
 	description = request.POST['description']
 	amount = request.POST['amount']	
-	code = payToAccount(user_name, password, card_number, account_number, description, amount)
+	code = payToAccount(card_number, nameOnCard, securityKey, account_number, description, amount)
 	if(code == 'noUser'):
 		return HttpResponse("ERROR: user does not exits ")
 	elif(code == 'limitExceeded'):
-		USER = User.objects.get(user_name=user_name, password=password)
-		return HttpResponse("your creditable amount is " + str(USER.card.credited_amount) + "ERROR: Transaction Failed because your transaction amount is more then available creditable money ")
+		USER = request.session['USER']
+		return HttpResponse("Your creditable amount is " + str(USER.card.credited_amount) + "ERROR: Transaction Failed because your transaction amount is more then available creditable money ")
+	elif(code == 'limitWrong'):
+		return HttpResponse("Your creditable amount is " + str(USER.card.credited_amount) + "ERROR: Transaction Failed because your transaction amount is less or more than standard limits")
 	else:
 		return HttpResponseRedirect('transfer.html')
 
-def payToAccount(user_name, password, card_number, account_number, description, amount):
+def payToAccount(card_number, nameOnCard, securityKey, account_number, description, amount):
 	try:
-		USER = User.objects.get(user_name=user_name, password=password)
-		CARD = Card.objects.get(card_number=card_number)
+		CARD = Card.objects.get(card_number=card_number, name_on_card=nameOnCard, security_pin=securityKey)
 	except (KeyError, User.DoesNotExist):
 		return 'noUser'
 	else:
-		if(USER.card.credited_amount + float(amount) > maxCreditLimit(USER.card.card_type)):
+		if(CARD.credited_amount + float(amount) > maxCreditLimit(CARD.card_type)):
 			return 'limitExceeded'
-		USER.card.credited_amount += float(amount)
-		USER.card.save()
+		elif(float(amount)< 100 or float(amount)>50000):
+			return 'limitWrong'
+		CARD.credited_amount += float(amount)
+		CARD.save()
 		#Using Account API add amount to the given account number
 		date = datetime.datetime.now()
 		generateStatement(CARD, date, amount, description)
-		sendSms(USER.personaldetail.mobile, "Your credit card account " + str(USER.bankdetail.account_number) + " credited INR " + str(amount) + " on " + str(date))
+		sendSms(CARD.user.personaldetail.mobile, "Your credit card account " + str(CARD.user.bankdetail.account_number) + " credited INR " + str(amount) + " on " + str(date))
 		return 'success'
 
 def generateStatement(CARD, date, amount, description):
@@ -286,7 +286,7 @@ def registerprocess(request):
 			bd_account_type = request.POST['ACCOUNT_TYPE']
 			cd_cardtype = request.POST['CARD_TYPE']
 			card_number = random.randint(10 ** 16, 10 ** 17 - 1)
-			security_key = random.randint(10 ** 4, 10 ** 5 - 1)
+			security_key = random.randint(10 ** 3, 10 ** 4 - 1)
 		else:	
 			return HttpResponseRedirect('/creditcard/register/userNameExistError/')
 	except (KeyError):
@@ -312,7 +312,23 @@ def registeredSuccessfully(request):
 	
 	"""
 	return render_to_response('home/index.html', {'Error':"You are successfully registered and ready for first time login"}, context_instance=RequestContext(request))
+
+def forgetPassword(request):
+	"""Render home page of the website """
+	return render_to_response('home/forgetpassword.html', context_instance=RequestContext(request))
 	
+def sendPassword(request):
+	"""Render home page of the website """
+	name = request.POST['username']
+	try:
+		USER = User.objects.get(user_name=name)
+	except (KeyError, User.DoesNotExist):
+		return HttpResponseRedirect('/creditcard/home/userDoesNotExist/')
+	else:
+		sendSms(USER.personaldetail.mobile, "Your password is" + str(USER.password))
+		return render_to_response('home/forgetpassword.html', context_instance=RequestContext(request))
+	return HttpResponseRedirect('/creditcard/home/forgetpassword.html/')	
+
 def sendSms(number, message):
 	"""
 	Function is used to send message to phone number using free api from provider way2sms.
@@ -335,10 +351,10 @@ def services(request):
 def userservices(request):
 	"""Render user services page of the website """
 	user = request.session['USER']
-	list_of_autopay = []
+	autopayList = []
 	for auto in user.autopay_set.all():
-		list_of_autopay.append(auto)
-	return render_to_response('user/services.html', {'list_of_autopay': list_of_autopay} , context_instance=RequestContext(request))
+		autopayList.append(auto)
+	return render_to_response('user/services.html', {'autopayList': autopayList} , context_instance=RequestContext(request))
 	
 def contact(request):
 	"""Render contact page of the website """
@@ -363,24 +379,7 @@ def silver(request):
 def register(request):
 	"""Render register page of the website """
 	return render_to_response('register/index.html', context_instance=RequestContext(request))
-
-def forgetPassword(request):
-	"""Render home page of the website """
-	return render_to_response('home/forgetpassword.html', context_instance=RequestContext(request))
 	
-def sendPassword(request):
-	"""Render home page of the website """
-	name = request.POST['username']
-	try:
-		USER = User.objects.get(user_name=name)
-	except (KeyError, User.DoesNotExist):
-		return HttpResponseRedirect('/creditcard/home/userDoesNotExist/')
-	else:
-		sendSms(USER.personaldetail.mobile, "Your password is" + str(USER.password))
-		return render_to_response('home/forgetpassword.html', context_instance=RequestContext(request))
-	return HttpResponseRedirect('/creditcard/home/forgetpassword.html/')	
-
-
 def userindex(request):
 	"""Render user home page of the website """
 	try:

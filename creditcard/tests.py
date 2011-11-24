@@ -6,12 +6,12 @@ Replace this with more appropriate tests for your application.
 """
 from django.test import Client
 from django.test import TestCase
-from django.utils import unittest
-from django.test.client import Client
-from selenium import selenium
-import unittest, time, re
+#from django.utils import unittest
+#from django.test.client import Client
+#from selenium import selenium
+import unittest
 from selenium import webdriver
-from selenium.webdriver.common.by import By
+#from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 
 
@@ -80,7 +80,7 @@ class LoginTest(unittest.TestCase):
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
-        except NoSuchElementException, e: return False
+        except NoSuchElementException: return False
         return True
     
     def tearDown(self):
@@ -103,20 +103,20 @@ class PaymentTest(unittest.TestCase):
         driver = self.driver
         driver.get("http://localhost:8000/creditcard/home/index.html")
         driver.find_element_by_name("username").clear()
-        driver.find_element_by_name("username").send_keys("ppp")
+        driver.find_element_by_name("username").send_keys("a")
         driver.find_element_by_name("password").clear()
-        driver.find_element_by_name("password").send_keys("12345678")
+        driver.find_element_by_name("password").send_keys("asdfghjk")
         driver.find_element_by_css_selector("input[type=\"submit\"]").click()
         driver.find_element_by_link_text("Payments").click()
         driver.find_element_by_name("user_name").clear()
-        driver.find_element_by_name("user_name").send_keys("ppp")
-        driver.find_element_by_name("password").send_keys("12345678")
+        driver.find_element_by_name("user_name").send_keys("a")
+        driver.find_element_by_name("password").send_keys("asdfghjk")
         driver.find_element_by_name("card_number").clear()
-        driver.find_element_by_name("card_number").send_keys("13413")
+        driver.find_element_by_name("card_number").send_keys("10704841418625110")
         driver.find_element_by_name("account_number").clear()
         driver.find_element_by_name("account_number").send_keys("111111111")
         driver.find_element_by_name("amount").clear()
-        driver.find_element_by_name("amount").send_keys("11111111")
+        driver.find_element_by_name("amount").send_keys("11")
         driver.find_element_by_name("description").clear()
         driver.find_element_by_name("description").send_keys("payment test case")
         driver.find_element_by_css_selector("input[type=\"submit\"]").click()
@@ -124,7 +124,7 @@ class PaymentTest(unittest.TestCase):
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
-        except NoSuchElementException, e: return False
+        except NoSuchElementException: return False
         return True
     
     def tearDown(self):
@@ -166,7 +166,7 @@ class Auto(unittest.TestCase):
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
-        except NoSuchElementException, e: return False
+        except NoSuchElementException: return False
         return True
     
     def tearDown(self):
@@ -203,7 +203,7 @@ class Hey(unittest.TestCase):
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
-        except NoSuchElementException, e: return False
+        except NoSuchElementException: return False
         return True
     
     def tearDown(self):
@@ -212,8 +212,6 @@ class Hey(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-	
-
 
 class RegisterTest(unittest.TestCase):
     def setUp(self):
@@ -292,7 +290,7 @@ class RegisterTest(unittest.TestCase):
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
-        except NoSuchElementException, e: return False
+        except NoSuchElementException: return False
         return True
     
     def tearDown(self):
@@ -302,7 +300,7 @@ class RegisterTest(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 
-	
+
 class Forgotpasswordtest(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
@@ -321,7 +319,7 @@ class Forgotpasswordtest(unittest.TestCase):
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
-        except NoSuchElementException, e: return False
+        except NoSuchElementException: return False
         return True
     
     def tearDown(self):

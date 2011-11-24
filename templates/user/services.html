@@ -24,17 +24,17 @@
 <div id="main">
 <div id="header">
 <div class="row-1">
-<div class="fleft"><a href="/creditcard/home/index.html"><img src="/creditcard/home/images/logo.gif" alt="" /></a></div>
+<div class="fleft"><a href="#"><img src="/creditcard/home/images/logo.gif" alt="" /></a></div>
 <div class="fright">
 <p>Welcome {{ request.session.USER.personaldetail.first_name }}
-{{request.session.USER.personaldetail.last_name }} <a
+{{request.session.USER.personaldetail.last_name }} || <a
 	href="/creditcard/user/logout.html">Logout</a></p>
 </div>
 </div>
 <div class="row-2">
 <div class="left">
 <ul>
-	<li><a href="/creditcard/home/index.html"><span>Home</span></a></li>
+	<li><a href="/creditcard/home/index.html" target="_blank"><span>Home</span></a></li>
 	<li><a href="/creditcard/home/cards.html" target="_blank"><span>Cards For You</span></a></li>
 	<li><a href="/creditcard/home/services.html" target="_blank"><span>Services For You</span></a></li>
 	<li><a href="/creditcard/home/contactus.html" target="_blank"><span>Contact	Us</span></a></li>
@@ -93,8 +93,8 @@ and enjoy a tension - free life.</p>
 	type="text"></p>
   <label for="amount">Amount:   </label> <input size="38" name="amount"
 	type="number"></p>
-	<p><label for="date">Date of Payment:   </label> <input size="38" name="date"
-	type="date"></p>
+	<p><label for="date">Date of payment:   </label> <input size="38" name="date"
+	type="text"></p>
 
 <p>	
   <input type="submit" value="Submit" />
@@ -122,7 +122,7 @@ and enjoy a tension - free life.</p>
  <br /><br /><br />
 <p> <b>RETURN CREDIT (Pay your bills)</b></p>
  <br  />
- <p><b>Credit Amount:</b>  {{request.session.USER.card.credited_amount}}
+ <p><b>Credited Amount:</b>  {{request.session.USER.card.credited_amount}}
  <br  /></p>
  <form action="paybill.html" method="post"
 	style="clear: right; width: 100%; overflow: hidden">

@@ -93,7 +93,7 @@ class Autopay(models.Model):
     to_account = models.CharField(max_length=20)
     description = models.CharField(max_length= 100)
     amount = models.FloatField()
-    date = models.DateField()
+    date = models.IntegerField(max_length=2)
     installment = models.CharField(max_length = 20)
     user = models.ForeignKey(User)
     
