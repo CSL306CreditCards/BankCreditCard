@@ -24,17 +24,17 @@
 <div id="main">
 <div id="header">
 <div class="row-1">
-<div class="fleft"><a href="/creditcard/home/index.html"><img src="/creditcard/home/images/logo.gif" alt="" /></a></div>
+<div class="fleft"><a href="#"><img src="/creditcard/home/images/logo.gif" alt="" /></a></div>
 <div class="fright">
 <p>Welcome {{ request.session.USER.personaldetail.first_name }}
-{{request.session.USER.personaldetail.last_name }} <a
+{{request.session.USER.personaldetail.last_name }} || <a
 	href="/creditcard/user/logout.html">Logout</a></p>
 </div>
 </div>
 <div class="row-2">
 <div class="left">
 <ul>
-	<li><a href="/creditcard/home/index.html"><span>Home</span></a></li>
+	<li><a href="/creditcard/home/index.html" target="_blank"><span>Home</span></a></li>
 	<li><a href="/creditcard/home/cards.html" target="_blank"><span>Cards For You</span></a></li>
 	<li><a href="/creditcard/home/services.html" target="_blank"><span>Services For You</span></a></li>
 	<li><a href="/creditcard/home/contactus.html" target="_blank"><span>Contact Us</span></a></li>
