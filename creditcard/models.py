@@ -67,7 +67,9 @@ class Card(models.Model):
     """
     
     """
+    name_on_card = models.CharField(max_length=200)
     card_number = models.CharField(max_length=200)
+    security_pin = models.IntegerField(max_length=10)
     card_type = models.CharField(max_length=200)	
     interest = models.FloatField()
     credited_amount = models.FloatField()

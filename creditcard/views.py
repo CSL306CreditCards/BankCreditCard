@@ -285,16 +285,17 @@ def registerprocess(request):
 			bd_branch_address = request.POST['BRANCH_ADDRESS']
 			bd_account_type = request.POST['ACCOUNT_TYPE']
 			cd_cardtype = request.POST['CARD_TYPE']
-			card_number = random.randint(10 ** 16, 10 ** 17)
+			card_number = random.randint(10 ** 16, 10 ** 17 - 1)
+			security_key = random.randint(10 ** 4, 10 ** 5 - 1)
 		else:	
 			return HttpResponseRedirect('/creditcard/register/userNameExistError/')
 	except (KeyError):
 		return HttpResponse("ERROR ")
 	else:
 		verification_flag = 'Not Verified'
-		if(verification_flag == 'Not Verified'):
-			return HttpResponse('Error: Registration Failed because your account details provided are not valid')
-		USER = User.objects.create(user_name=ld_uname, password=ld_pswd, verification_flag='verification_flag')
+		#if(verification_flag == 'Not Verified'):
+		#	return HttpResponse('Error: Registration Failed because your account details provided are not valid')
+		USER = User.objects.create(user_name=ld_uname, password=ld_pswd, verification_flag=verification_flag)
 		USER.save()
 		pd = PersonalDetail(first_name=pd_firstname, last_name=pd_lastname, gender=pd_gender, education=pd_education, father_name=pd_fathername, mother_name=pd_mothername, current_address=pd_currentaddress, city=pd_city, pincode=pd_pincode, permanent_address=pd_permanentaddress, telephone=pd_telephone, mobile=pd_mobile, user=USER)				
 		pd.save()
@@ -302,7 +303,7 @@ def registerprocess(request):
 		ed.save()
 		bd = BankDetail(account_number=bd_account_number, bankname=bd_bankname, branch_address=bd_branch_address, account_type=bd_account_type, user=USER)
 		bd.save()
-		cd = Card(card_type=cd_cardtype, interest=interest(cd_cardtype), credited_amount=0, user=USER, card_number=card_number)	
+		cd = Card(card_type=cd_cardtype, security_pin=security_key, interest=interest(cd_cardtype), credited_amount=0, name_on_card=pd_firstname, user=USER, card_number=card_number)	
 		cd.save()		
 		return HttpResponseRedirect('/creditcard/home/registeredSuccessfully/')
 		
@@ -363,11 +364,11 @@ def register(request):
 	"""Render register page of the website """
 	return render_to_response('register/index.html', context_instance=RequestContext(request))
 
-def forgetpass(request):
+def forgetPassword(request):
 	"""Render home page of the website """
 	return render_to_response('home/forgetpassword.html', context_instance=RequestContext(request))
 	
-def send_password(request):
+def sendPassword(request):
 	"""Render home page of the website """
 	name = request.POST['username']
 	try:

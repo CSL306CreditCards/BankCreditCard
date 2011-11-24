@@ -80,16 +80,41 @@ and enjoy a tension - free life.</p>
 {{request.session.USER.personaldetail.last_name }}</p>
 <b>Card Detail</b> <br />
 <br />
-<p>Credit Card Number {{ request.session.USER.card.card_number }}<br />
-Credit Card Type {{ request.session.USER.card.card_type }}<br />
-Credited Amount {{ request.session.USER.card.credited_amount }} <br />
-Interest {{request.session.USER.card.interest }}</p>
+Credit Card Number:  {{ request.session.USER.card.card_number }}<br />
+Credit Card Type:    {{ request.session.USER.card.card_type }}<br />
+Credited Amount:     {{ request.session.USER.card.credited_amount }} <br />
+<br />
 <b> Account Details </b> <br />
 <br />
-<p>Account Number{{ request.session.USER.bankdetail.account_number}}<br />
-Bank Name {{ request.session.USER.bankdetail.bankname }}<br />
-Branch Address {{request.session.USER.bankdetail.branch_address}}<br />
-Account Type {{ request.session.USER.bankdetail.account_type }}</p>
+Account Number:      {{ request.session.USER.bankdetail.account_number}}<br />
+Bank Name:           {{ request.session.USER.bankdetail.bankname }}<br />
+Branch Address:      {{request.session.USER.bankdetail.branch_address}}<br />
+Account Type:        {{ request.session.USER.bankdetail.account_type }}<br />
+<br />
+<b> Personal Details </b> 
+<br /><br />
+First Name:          {{ request.session.USER.personaldetail.first_name }}<br />
+Last Name:           {{ request.session.USER.personaldetail.first_name }}<br />
+Gender Name:         {{ request.session.USER.personaldetail.first_name }}<br />
+Education Name:      {{ request.session.USER.personaldetail.first_name }}<br />
+Father Name:         {{ request.session.USER.personaldetail.first_name }}<br />
+Mother Name:         {{ request.session.USER.personaldetail.first_name }}<br />
+Current Address:     {{ request.session.USER.personaldetail.first_name }}<br />
+PinCode:             {{ request.session.USER.personaldetail.first_name }}<br />
+Permanent Address:   {{ request.session.USER.personaldetail.first_name }}<br />
+Telephone:  	   	 {{ request.session.USER.personaldetail.first_name }}<br />
+Mobile:  			 {{ request.session.USER.personaldetail.first_name }}<br />
+<br /><br />
+<b> Employment Details </b> <br />
+<br />
+Company Name:        {{ request.session.USER.bankdetail.account_type }}<br />
+Company Type:        {{ request.session.USER.bankdetail.account_number}}<br />
+Designation:         {{ request.session.USER.bankdetail.bankname }}<br />
+Income:              {{request.session.USER.bankdetail.branch_address}}<br />
+Work Years:          {{ request.session.USER.bankdetail.account_type }}<br />
+Office Address:      {{ request.session.USER.bankdetail.account_type }}<br />
+City:        		 {{ request.session.USER.bankdetail.account_type }}<br />
+Email:        		 {{ request.session.USER.bankdetail.account_type }}<br />
 </div>
 <div class="col-2">
 <div class="box2">
