@@ -20,6 +20,22 @@ def cards(request):
 def services(request):
 	"""Render services page of the website """
 	return render_to_response('home/services.html', context_instance=RequestContext(request))
+
+def forgetpass(request):
+	"""Render home page of the website """
+	return render_to_response('home/forgetpassword.html', context_instance=RequestContext(request))
+	
+def send_password(request):
+	"""Render home page of the website """
+	name = request.POST['username']
+	try:
+		USER = User.objects.get(user_name=name)
+	except (KeyError, User.DoesNotExist):
+		return HttpResponseRedirect('/creditcard/home/userDoesNotExist/')
+	else:
+		#send_sms(USER.personaldetail.mobile,"Your password is"+str(USER.password))
+		return render_to_response('home/forgetpassword.html', context_instance=RequestContext(request))
+	#return HttpResponseRedirect('/creditcard/home/forgetpassword.html/')	
 	
 def userservices(request):
 	"""Render user services page of the website """
@@ -162,14 +178,14 @@ def autopay(request):
 	m = int(date[5:7])
 	d = int(date[8:10])
 	date = datetime.datetime(y, m, d)
-	installment = request.POST['installment']
+	#installment = request.POST['installment']
 	USER = request.session['USER']
 	try:
 		Card.objects.get(card_number=card_number)
 	except (KeyError, Card.DoesNotExist):
 		return HttpResponse("ERROR: Incorrect Card Number ")
 	else:
-		a = Autopay(to_account=account_no, description=description, date=date, amount=amount, installment=installment, user=USER)				
+		a = Autopay(to_account=account_no, description=description, date=date, amount=amount, user=USER)				
 		a.save()
 		return HttpResponseRedirect('services.html')
 	
