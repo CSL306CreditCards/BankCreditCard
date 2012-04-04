@@ -35,7 +35,7 @@ class SimpleTest(TestCase):
     def test_index(self):
         client = Client()
         response = client.get('/creditcard/home/')
-        self.assertEqual(response.status_code, 200)		
+        self.assertEqual(response.status_code, 200)    	
 
     def test_statement_display(self):
         """
