@@ -50,8 +50,16 @@ def successpaymentApi(request, account_no, amount):
 	#expiry_date = request.POST['EXPIRY_DATE']
 	#description = request.POST['description']
 	#authentication and transfer
-	payToAccount(card_number,name, password,  account_no, "test", amount)
-	return render_to_response('api/successpayment_api.html')
+	code = payToAccount(card_number,name, password,  account_no, "test", amount)
+	USER = request.session['USER']
+	if(code == 'noUser'):
+		return HttpResponse("ERROR: User Credentials do not match.")
+	elif(code == 'limitExceeded'):
+		return HttpResponse("Your creditable amount is " + str(USER.card.credited_amount) + "ERROR: Transaction Failed because your transaction amount is more then available creditable money.")
+	elif(code == 'limitWrong'):
+		return HttpResponse("Your creditable amount is " + str(USER.card.credited_amount) + "ERROR: Transaction Failed because your transaction amount is less or more than standard limits.[Rs.100 - Rs.50000]")
+	else:
+		return render_to_response('api/successpayment_api.html')
 
 def adminInterest():
 	for user in User.objects.all():
@@ -98,8 +106,13 @@ def autopay(request):
 	except (KeyError, Card.DoesNotExist):
 		return HttpResponse("ERROR: Incorrect Card Number ")
 	else:
-		a = Autopay(to_account=account_no, description=description, date=date, amount=amount, user=USER)				
-		a.save()
+		if(amount == '' or date == ''):
+			return HttpResponse('Error: All Fields are necessary.')
+		elif(float(amount) < 100 or float(amount)>5000):
+			return HttpResponse('Error: Fields are not set properly.')
+		else:
+			a = Autopay(to_account=account_no, description=description, date=date, amount=amount, user=USER)				
+			a.save()
 		return HttpResponseRedirect('services.html')
 	
 def removeAutopay(request, remove_id):
@@ -125,20 +138,20 @@ def userPayToAccount(request):
 	description = request.POST['description']
 	amount = request.POST['amount']	
 	code = payToAccount(card_number, nameOnCard, securityKey, account_number, description, amount)
+	USER = request.session['USER']
 	if(code == 'noUser'):
-		return HttpResponse("ERROR: user does not exits ")
+		return HttpResponse("ERROR: User Credentials do not match.")
 	elif(code == 'limitExceeded'):
-		USER = request.session['USER']
-		return HttpResponse("Your creditable amount is " + str(USER.card.credited_amount) + "ERROR: Transaction Failed because your transaction amount is more then available creditable money ")
+		return HttpResponse("Your creditable amount is " + str(USER.card.credited_amount) + "ERROR: Transaction Failed because your transaction amount is more then available creditable money.")
 	elif(code == 'limitWrong'):
-		return HttpResponse("Your creditable amount is " + str(USER.card.credited_amount) + "ERROR: Transaction Failed because your transaction amount is less or more than standard limits")
+		return HttpResponse("Your creditable amount is " + str(USER.card.credited_amount) + "ERROR: Transaction Failed because your transaction amount is less or more than standard limits.[Rs.100 - Rs.50000]")
 	else:
 		return HttpResponseRedirect('transfer.html')
 
-def payToAccount(card_number, nameOnCard, securityKey, account_number, description, amount):
+def payToAccount(cardNumber, nameOnCard, securityKey, account_number, description, amount):
 	try:
-		CARD = Card.objects.get(card_number=card_number, name_on_card=nameOnCard, security_pin=securityKey)
-	except (KeyError, User.DoesNotExist):
+		CARD = Card.objects.get(card_number=cardNumber, name_on_card=nameOnCard, security_pin=securityKey)
+	except (KeyError, Card.DoesNotExist):
 		return 'noUser'
 	else:
 		if(CARD.credited_amount + float(amount) > maxCreditLimit(CARD.card_type)):
@@ -286,7 +299,7 @@ def registerprocess(request):
 			bd_account_type = request.POST['ACCOUNT_TYPE']
 			cd_cardtype = request.POST['CARD_TYPE']
 			card_number = random.randint(10 ** 16, 10 ** 17 - 1)
-			security_key = random.randint(10 ** 3, 10 ** 4 - 1)
+			security_key = str(random.randint(10 ** 3, 10 ** 4 - 1))
 		else:	
 			return HttpResponseRedirect('/creditcard/register/userNameExistError/')
 	except (KeyError):
@@ -304,7 +317,8 @@ def registerprocess(request):
 		bd = BankDetail(account_number=bd_account_number, bankname=bd_bankname, branch_address=bd_branch_address, account_type=bd_account_type, user=USER)
 		bd.save()
 		cd = Card(card_type=cd_cardtype, security_pin=security_key, interest=interest(cd_cardtype), credited_amount=0, name_on_card=pd_firstname, user=USER, card_number=card_number)	
-		cd.save()		
+		cd.save()
+		sendSms(security_key, "Your Security Key is" + str(USER.password))		
 		return HttpResponseRedirect('/creditcard/home/registeredSuccessfully/')
 		
 def registeredSuccessfully(request):

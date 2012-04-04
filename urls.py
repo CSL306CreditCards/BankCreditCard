@@ -52,8 +52,9 @@ urlpatterns = patterns('',
     url(r'^creditcard/user/paybill.html$', 'creditcard.views.payBill'),
     url(r'^creditcard/user/logout.html$', 'creditcard.views.logout'),
 	url(r'^creditcard/sms_api/number=(?P<number>\d+)/message=(?P<message>.+)', 'creditcard.views.sendSms'),
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^admin/doc', include('django.contrib.admindocs.urls')),
+    
     
 )
 urlpatterns += patterns('django.views.static',
